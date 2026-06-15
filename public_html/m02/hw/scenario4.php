@@ -3,7 +3,7 @@
 // @ts-nocheck
 require_once "base.php";
 
-$ucid = "mt85"; // <-- set your ucid
+$ucid = "sa3327"; // <-- set your ucid
 
 // Don't edit the arrays below, they are used to test your code
 $array1 = ["hello world!", "php programming", "special@#$%^&characters", "numbers 123 456", "mIxEd CaSe InPut!"];
@@ -37,6 +37,19 @@ function transformText($arr, $arrayNumber) {
         // Step 1: sketch out plan using comments (include ucid and date)
         // Step 2: Add/commit your outline of comments (required for full credit)
         // Step 3: Add code to solve the problem (add/commit as needed)
+
+        // plan: use preg_replace to remove special chars, use trim to remove spaces, use ucwords() to capitalize first letter
+        // UCID: sa3327
+        // Date: 06/15/26
+
+        $placeholderForModifiedPhrase = preg_replace("/[^a-zA-Z0-9 ]/", "", $text);
+        // ^ means not, a-z A-Z are for letters, and 0-9 are for numbers
+
+        $placeholderForModifiedPhrase = preg_replace("/\s+/", " ", $placeholderForModifiedPhrase);
+
+        $placeholderForModifiedPhrase = trim($placeholderForModifiedPhrase);
+
+        $placeholderForModifiedPhrase = ucwords(strtolower($placeholderForModifiedPhrase));
 
         // End Solution Edits
     
