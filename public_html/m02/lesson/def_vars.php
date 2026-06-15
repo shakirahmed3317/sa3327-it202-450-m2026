@@ -6,3 +6,4 @@ $is_ready = true;
 echo $course_code;
 var_dump($attempt_count);
 var_export($is_ready);
+ 
