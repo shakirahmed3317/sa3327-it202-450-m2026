@@ -42,6 +42,15 @@ function transformText($arr, $arrayNumber) {
         // UCID: sa3327
         // Date: 06/15/26
 
+        $placeholderForModifiedPhrase = preg_replace("/[^a-zA-Z0-9 ]/", "", $text);
+        // ^ means not, a-z A-Z are for letters, and 0-9 are for numbers
+
+        $placeholderForModifiedPhrase = preg_replace("/\s+/", " ", $placeholderForModifiedPhrase);
+
+        $placeholderForModifiedPhrase = trim($placeholderForModifiedPhrase);
+
+        $placeholderForModifiedPhrase = ucwords(strtolower($placeholderForModifiedPhrase));
+
         // End Solution Edits
     
         printScenario4Transformations($index, $placeholderForModifiedPhrase, $placeholderForMiddleCharacters);
