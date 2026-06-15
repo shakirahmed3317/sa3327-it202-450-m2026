@@ -29,8 +29,15 @@ function printOdds($arr, $arrayNumber)
     // Start Solution Edits
     // set solution to $output_result variable
     
-    // plan: loop through the array, use modulus to check if its odd, print odd values
+    // plan: loop through the array, use modulus to check if its odd, print odd values 
+    // UCID: sa3327
+    // Date: 06/15/26
 
+    foreach ($arr as $arrayNumber) {
+        if ($arrayNumber % 2 != 0) {
+            $output_result .= $arrayNumber . ', ';
+        }
+    }
 
     // End Solution Edits
     printScenario1Output($output_result);
