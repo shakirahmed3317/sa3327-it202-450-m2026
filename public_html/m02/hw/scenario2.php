@@ -39,7 +39,11 @@ function sumValues($arr, $arrayNumber)
     // Solve Challenge 2 here: Format to 2 decimal places
     $modifiedTotal = "?";
 
-    
+    foreach ($arr as $num) {
+        $total += $num;
+    }
+
+    $modifiedTotal = number_format($total, 2);
 
     // End Solution Edits
     printScenario2Output($total, $modifiedTotal);
