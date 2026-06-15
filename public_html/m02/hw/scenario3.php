@@ -35,7 +35,13 @@ function bePositive($arr, $arrayNumber)
     $output = array_fill(0, count($arr), null); // Initialize output array
     // Start Solution Edits
 
-
+    foreach ($arr as $index => $value) {
+        if (is_string($value)) {
+            $output[$index] = preg_replace("/-/", "", $value);
+        } else {
+            $output[$index] = abs($value);
+        }
+    }
 
     // End Solution Edits
     printScenario3Output($output);
