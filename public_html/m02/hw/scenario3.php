@@ -3,7 +3,7 @@
 // @ts-nocheck
 require_once "base.php";
 
-$ucid = "mt85"; // <-- set your ucid
+$ucid = "sa3327"; // <-- set your ucid
 
 // Don't edit the arrays below, they are used to test your code
 $array1 = [42, -17, 89, -256, 1024, -4096, 50000, -123456];
@@ -19,7 +19,6 @@ function bePositive($arr, $arrayNumber)
     printScenario3ArrayInfo($arr, $arrayNumber);
     // This should be solved without Copilot auto-completion, to toggle it, click the Copilot chat bubble at the top of the editor.
     //  Configure inline suggestions to "Disabled Inline Suggestions" (or similar) when writing code for this problem.
-    
     // Challenge 1: Make each value positive
     // Challenge 2: Keep or restore each value's original data type and assign it to the proper slot in the `output` array
     // Note: You do not control the bracketed type labels in the output; base.php prints them so you can verify your data types.
@@ -28,8 +27,14 @@ function bePositive($arr, $arrayNumber)
     // Step 2: Add/commit your outline of comments (required for full credit)
     // Step 3: Add code to solve the problem (add/commit as needed)
 
+    // plan: loop through array, use abs() for integers. for strings, use preg_replace to remove the negative sign.
+    // UCID: sa3327
+    // Date: 06/15/26
+
+
     $output = array_fill(0, count($arr), null); // Initialize output array
     // Start Solution Edits
+
 
 
     // End Solution Edits
