@@ -94,6 +94,27 @@ Notes:
             use overflow hidden on the body
             use vh and calc() to make the layout fill the viewport height
         */
+
+        header {
+            position: fixed;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+        }
+
+        main {
+            overflow: auto;
+        }
+
+        .challenge1 {
+            overflow: hidden;
+        }
+
+        main {
+            height: calc(100vh - 5rem);
+        }
     </style>
 </body>
 
