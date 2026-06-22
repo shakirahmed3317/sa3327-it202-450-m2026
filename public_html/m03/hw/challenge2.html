@@ -51,7 +51,7 @@ Notes:
         </ul>
     </nav>
     <!-- Edit your UCID here -->
-    <header>Header Section (mt85)</header>
+    <header>Header Section (sa3327)</header>
     <!-- Don't make any other edits to the HTML -->
     <div class="container">
         <aside id="left-sidebar">
@@ -116,6 +116,24 @@ Notes:
     </div>
 
     <script src="utils.js"></script>
+
+    <!-- 
+     
+    sa3327 06/22/26
+    Plan for CSS:
+    use fixed height on the header
+    use calc(100vh - something) on .container to take up remaining height
+    use display flex for sidebars 
+    use width 15% on the sidebars when open
+    use a collapsed class on the sidebars
+    use flex on the content area 
+
+    Plan for JavaScript:
+    use a event listener for each sidebar button
+    use query selector identify the sidebar
+    use classList.toggle() so the button only collpases/expands its own sidebar and keeps the button visible
+    use flex layout to automatically resize content
+    -->
 
     <script>
         /*
