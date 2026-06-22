@@ -140,6 +140,18 @@ Notes:
             Add UCID/date and planning comments before your JavaScript solution.
             Solve the sidebar toggle logic here by attaching appropriate event listeners.
         */
+
+        const left = document.querySelector("#left-sidebar button");
+        const right = document.querySelector("#right-sidebar button");
+
+        left.addEventListener("click", function() {
+            document.querySelector("#left-sidebar").classList.toggle("collapsed");
+        });
+
+        right.addEventListener("click", function() {
+            document.querySelector("#right-sidebar").classList.toggle("collapsed");
+        });
+
     </script>
 
     <style>
@@ -147,6 +159,38 @@ Notes:
             Add UCID/date and planning comments before your CSS solution.
             Write Challenge 2 layout CSS here; do not override anything in styles.css.
         */
+
+        .challenge2 {
+            height: 100vh;
+        }
+
+        header {
+            height: 1.5rem;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        #left-sidebar, #right-sidebar {
+            width: 15%;
+            position: relative;
+        }
+
+        #left-sidebar.collapsed, #right-sidebar.collapsed {
+            width: 2rem;
+        }
+
+        .content {
+            flex: 1;
+            overflow: auto;
+        }
+
+        #left-sidebar button, #right-sidebar button {
+            position: absolute;
+            top: 0;
+        }
     </style>
 </body>
 
