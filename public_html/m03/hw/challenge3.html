@@ -134,6 +134,42 @@ Notes:
             Add UCID/date and planning comments before your JavaScript solution.
             Solve the carousel button logic here by attaching appropriate event listeners.
         */
+
+        const panels = document.querySelectorAll(".panel");
+        const prev = document.querySelectorAll("nav button")[0];
+        const next = document.querySelectorAll("nav button")[1];
+
+        let curr = 0;
+
+        function showPanel(index) {
+            panels.forEach(function(panel) {
+                panel.style.display = "none";
+            });
+
+            panels[index].style.display = "flex";
+        }
+
+        showPanel(curr);
+
+        next.addEventListener("click", function() {
+            curr++;
+
+            if (curr >= panels.length) {
+                curr = 0;
+            }
+
+            showPanel(curr);
+        })
+
+        prev.addEventListener("click", function() {
+            curr--;
+
+            if (curr < 0) {
+                curr = panels.length - 1;
+            }
+
+            showPanel(curr);
+        })
     </script>
 
     <style>
@@ -141,6 +177,42 @@ Notes:
             Add UCID/date and planning comments before your CSS solution.
             Write Challenge 3 layout CSS here; do not override anything in styles.css.
         */
+
+        .challenge3 {
+            height: 100vh;
+        }
+
+        header {
+            height: 2rem;
+        }
+
+        .carousel {
+            width: 100%;
+            height: calc(100vh - 4rem);
+        }
+
+        .carousel-container {
+            height: 100%;
+        }
+
+        .panel {
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .panel div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body > nav:nth-of-type(2) {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
     </style>
 </body>
 
