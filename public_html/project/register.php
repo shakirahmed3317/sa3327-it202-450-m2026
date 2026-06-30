@@ -2,7 +2,7 @@
 $errors = [];
 $email = "";
 
-require_once(__DIR__ . "/../../lib/db.php");
+require_once(__DIR__ . "/../../lib/app.php");
 
 if (isset($_POST["email"], $_POST["password"], $_POST["confirm_password"])) {
     $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
@@ -62,6 +62,7 @@ if (isset($_POST["email"], $_POST["password"], $_POST["confirm_password"])) {
 </head>
 
 <body>
+    <?php render_nav(); ?>
     <h1>Register</h1>
     <form method="post" action="register.php" onsubmit="return validate(this);">
         <p id="form-message"></p>
