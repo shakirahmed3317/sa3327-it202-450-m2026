@@ -20,7 +20,14 @@ No limit is required.
 // calculate days_offset from completed date
 // order results by most recently completed and most recent due date
 
-$query = ""; // edit this
+$query =
+    "SELECT id, task, due,
+    DATE(completed) AS completed,
+    DATEDIFF(due, DATE(completed)) AS days_offset,
+    assigned
+    FROM M4_Todos
+    WHERE is_complete = 1
+    ORDER BY completed DESC, due DESC"; // edit this
 $results = [];
 try {
     $stmt = $db->prepare($query);
