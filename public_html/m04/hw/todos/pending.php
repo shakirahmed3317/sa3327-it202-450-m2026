@@ -4,6 +4,11 @@ require_once(__DIR__ . "/../../../../lib/db.php"); ?>
 <?php
 $db = getDB();
 // process complete action
+
+// Date: 07/01/26 UCID: sa3327
+// Plan:
+// validate submitted todo id before updating DB, make UPDATE query to complete todos, SELECT query to fetch incomplete, calculate day_offset from the due date, order results by date
+
 if (isset($_POST["id"])) {
     $id = $_POST["id"];
     /*
