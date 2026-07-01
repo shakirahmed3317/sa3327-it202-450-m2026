@@ -21,6 +21,9 @@ if (empty($diff)) {
     // can edit here
     // End validations
 
+    // Date: 07/01/26 UCID: sa3327
+    // Plan: 
+    // create the html form, validate values before inserting, write a SQL insert query, test with valid and invalid cases
     
     if ($is_valid) {
         /*
