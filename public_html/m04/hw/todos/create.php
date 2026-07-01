@@ -19,20 +19,43 @@ if (empty($diff)) {
     // Assigned should check for "self" if a valid format/value isn't provided.
     // Start validations
     // can edit here
+    if (empty($task)) {
+        echo "Task is required.<br>";
+        $is_valid = false;
+    } elseif (strlen($task) > 128) {
+        echo "Task must be 128 characters or less.<br>";
+        $is_valid = false;
+    }
+
+    if (strtotime($due) == false) {
+        echo "Due must be a valid date.<br>";
+        $is_valid = false;
+    }
+
+    if (empty($assigned)) {
+        $assigned = "self";
+    } elseif (strlen($assigned) > 60) {
+        echo "Assigned must be 60 characters or less.<br>";
+        $is_valid = false;
+    }
     // End validations
 
     // Date: 07/01/26 UCID: sa3327
     // Plan: 
     // create the html form, validate values before inserting, write a SQL insert query, test with valid and invalid cases
-    
+
     if ($is_valid) {
         /*
         Design a query to insert the incoming data to the proper columns.
         Ensure valid and proper PDO named placeholders are used.
         https://phpdelusions.net/pdo
         */
-        $query = ""; // edit this
-        $params = []; // Apply the proper PDO placeholder to variable mapping here
+        $query = "INSERT INTO M4_Todos (task, due, assigned) VALUES (:task, :due, :assigned)"; // edit this
+        $params = [
+            ":task" => $task,
+            ":due" => $due,
+            ":assigned" => $assigned
+        ]; // Apply the proper PDO placeholder to variable mapping here
         try {
             $db = getDB();
             $stmt = $db->prepare($query);
@@ -65,7 +88,18 @@ if (empty($diff)) {
             <!-- design the form with proper labels and input fields with the correct types based on the SQL table.
              Wrap each label/input pair in a div tag.
              For "Assigned" ensure the default value is "self". -->
-          
+            <div>
+                <label for="task">Task</label>
+                <input type="text" id="task" name="task">
+            </div>
+            <div>
+                <label for="due">Due date</label>
+                <input type="data" id="due" name="due">
+            </div>
+            <div>
+                <label for="assigned">Assigned</label>
+                <input type="text" id="assigned" name="assigned" value="self">
+            </div>
             <div>
                 <input type="submit" />
             </div>
