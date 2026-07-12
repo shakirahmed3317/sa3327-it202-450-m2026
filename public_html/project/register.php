@@ -64,7 +64,6 @@ if (isset($_POST["email"], $_POST["password"], $_POST["confirm_password"])) {
     <?php render_nav(); ?>
     <h1>Register</h1>
     <form method="post" action="register.php" onsubmit="return validate(this);">
-        <p id="form-message"></p>
 
         <label for="email">Email</label>
         <input id="email" name="email" type="email"
@@ -84,14 +83,13 @@ if (isset($_POST["email"], $_POST["password"], $_POST["confirm_password"])) {
 
     <script>
         function validate(form) {
-            const message = document.querySelector("#form-message");
             const errors = [];
 
             validate_email(form.email, errors);
             validate_password(form.password, errors);
             validate_passwords_match(form.password, form.confirm_password, errors);
 
-            return show_validation_errors(message, errors);
+            return show_validation_errors(errors);
         }
     </script>
         <!-- Last PHP inside <body> so it captures messages queued during this request. -->
