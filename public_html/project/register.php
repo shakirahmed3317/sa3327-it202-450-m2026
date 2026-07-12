@@ -30,8 +30,10 @@ if (isset($_POST["email"], $_POST["password"], $_POST["confirm_password"])) {
         ]);
 
         error_log("Registration insert succeeded for user id " . $db->lastInsertId());
-        echo "Registration saved. This temporary message can be replaced later.";
+        flash("Account created. Please log in.", "success");
         $email = "";
+        header("Location: login.php");
+        exit;
     } catch (PDOException $e) {
         // SQLSTATE 23000 commonly means an integrity constraint failed.
         if ($e->getCode() === "23000") {
@@ -41,6 +43,11 @@ if (isset($_POST["email"], $_POST["password"], $_POST["confirm_password"])) {
             $errors[] = "Registration failed. Please try again.";
         }
     }
+    // Any validation or PDO errors collected above show on the same form.
+    flash_errors($errors);
+    // Keep validation failures on this request so sticky form values remain.
+    // header("Location: register.php");
+    // exit;
 }
 ?>
 
@@ -87,6 +94,8 @@ if (isset($_POST["email"], $_POST["password"], $_POST["confirm_password"])) {
             return show_validation_errors(message, errors);
         }
     </script>
+        <!-- Last PHP inside <body> so it captures messages queued during this request. -->
+    <?php render_flash_messages(); ?>
 </body>
 
 </html>

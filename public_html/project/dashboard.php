@@ -18,5 +18,7 @@ if (!is_logged_in()) {
     <?php render_nav(); ?>
     <h1>Dashboard</h1>
     <p>Welcome, <?php echo htmlspecialchars(get_user_email()); ?></p>
+        <!-- Last PHP inside <body> so it captures messages queued during this request. -->
+    <?php render_flash_messages(); ?>
 </body>
 </html>

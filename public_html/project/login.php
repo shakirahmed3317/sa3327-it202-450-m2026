@@ -41,9 +41,15 @@ if (isset($_POST["email"], $_POST["password"])) {
         $user["user_id"] = (int) $user["user_id"];
         unset($user["password_hash"]);
         $_SESSION["user"] = $user;
+        flash("Welcome back.", "success");
         header("Location: dashboard.php");
         exit;
     }
+    // Any validation, lookup, or password errors collected above show on the same form.
+    flash_errors($errors);
+    // Keep validation failures on this request so sticky form values remain.
+    // header("Location: login.php");
+    // exit;
 }
 
 $message = implode("<br>", array_map("htmlspecialchars", $errors));
@@ -85,6 +91,8 @@ $message = implode("<br>", array_map("htmlspecialchars", $errors));
     return show_validation_errors(message, errors);
         }
     </script>
+        <!-- Last PHP inside <body> so it captures messages queued during this request. -->
+    <?php render_flash_messages(); ?>
 </body>
 
 </html>
