@@ -1,3 +1,18 @@
+// File: public_html/project/helpers.js
+function flash(message = "", color = "info") {
+    const flash = document.getElementById("flash");
+    const outerDiv = document.createElement("div");
+    outerDiv.className = "row justify-content-center";
+
+    const innerDiv = document.createElement("div");
+    innerDiv.className = `alert alert-${color}`;
+    // Temporary prefix for clearer evidence gathering; remove after all milestones are complete.
+    innerDiv.innerText = `(js) ${message}`;
+
+    outerDiv.appendChild(innerDiv);
+    flash.appendChild(outerDiv);
+}
+
 function validate_email(emailInput, errors) {
     if (emailInput.validity.valueMissing) {
         errors.push("Enter an email address.");
@@ -48,7 +63,8 @@ function validate_passwords_match(passwordInput, confirmInput, errors) {
     return true;
 }
 
-function show_validation_errors(messageElement, errors) {
-    messageElement.innerHTML = errors.join("<br>");
+function show_validation_errors(errors) {
+    document.getElementById("flash").innerHTML = "";
+    errors.forEach((error) => flash(error, "danger"));
     return errors.length === 0;
 }

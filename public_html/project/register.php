@@ -5,42 +5,32 @@ $email = "";
 require_once(__DIR__ . "/../../lib/app.php");
 
 if (isset($_POST["email"], $_POST["password"], $_POST["confirm_password"])) {
-    $email = sanitize_email($_POST["email"]);
-    $password = $_POST["password"];
-    $confirmPassword = $_POST["confirm_password"];
-
-    validate_email($email, $errors);
-    validate_password($password, $errors);
-    validate_passwords_match($password, $confirmPassword, $errors);
+    // Existing input cleanup and validation stay above the database code.
 
     if (empty($errors)) {
-        // TODO: connect to the database, hash the password, and insert the user.
-    }
-    try {
-        $db = getDB();
-        $hash = password_hash($password, PASSWORD_BCRYPT);
+        try {
+            // Existing getDB(), password_hash(), prepare(), and execute() stay here.
 
-        $stmt = $db->prepare(
-            "INSERT INTO Users (email, password_hash)
-             VALUES (:email, :password_hash)"
-        );
-        $stmt->execute([
-            ":email" => $email,
-            ":password_hash" => $hash,
-        ]);
-
-        error_log("Registration insert succeeded for user id " . $db->lastInsertId());
-        echo "Registration saved. This temporary message can be replaced later.";
-        $email = "";
-    } catch (PDOException $e) {
-        // SQLSTATE 23000 commonly means an integrity constraint failed.
-        if ($e->getCode() === "23000") {
-            $errors[] = "That email is already registered.";
-        } else {
-            error_log("Registration failed: " . $e->getMessage());
-            $errors[] = "Registration failed. Please try again.";
+            error_log("Registration insert succeeded for user id " . $db->lastInsertId());
+            // Replace the temporary success echo with flash + redirect.
+            flash("Account created. Please log in.", "success");
+            header("Location: login.php");
+            exit;
+        } catch (PDOException $e) {
+            if ($e->getCode() === "23000") {
+                $errors[] = "That email is already registered.";
+            } else {
+                error_log("Registration failed: " . $e->getMessage());
+                $errors[] = "Registration failed. Please try again.";
+            }
         }
     }
+
+    // Any validation or PDO errors collected above show on the same form.
+    flash_errors($errors);
+    // Keep validation failures on this request so sticky form values remain.
+    // header("Location: register.php");
+    // exit;
 }
 ?>
 
@@ -57,7 +47,6 @@ if (isset($_POST["email"], $_POST["password"], $_POST["confirm_password"])) {
     <?php render_nav(); ?>
     <h1>Register</h1>
     <form method="post" action="register.php" onsubmit="return validate(this);">
-        <p id="form-message"></p>
 
         <label for="email">Email</label>
         <input id="email" name="email" type="email"
@@ -77,16 +66,16 @@ if (isset($_POST["email"], $_POST["password"], $_POST["confirm_password"])) {
 
     <script>
         function validate(form) {
-            const message = document.querySelector("#form-message");
             const errors = [];
 
             validate_email(form.email, errors);
             validate_password(form.password, errors);
             validate_passwords_match(form.password, form.confirm_password, errors);
 
-            return show_validation_errors(message, errors);
+            return show_validation_errors(errors);
         }
     </script>
+    <?php render_flash_messages(); ?>
 </body>
 
 </html>
