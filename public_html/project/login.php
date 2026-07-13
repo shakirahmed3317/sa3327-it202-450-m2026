@@ -16,7 +16,7 @@ if (isset($_POST["email"], $_POST["password"])) {
         try {
             $db = getDB();
             $stmt = $db->prepare(
-                "SELECT id AS user_id, email, password_hash
+                "SELECT id AS user_id, email, username, password_hash
                  FROM Users
                  WHERE email = :email
                  LIMIT 1"

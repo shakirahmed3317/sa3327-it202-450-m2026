@@ -32,7 +32,7 @@ function validate_username(usernameInput, errors) {
         || usernameInput.validity.tooLong
         || usernameInput.validity.patternMismatch
     ) {
-        errors.push("Use 3-30 lowercase letters, numbers, underscores, or hyphens.");
+        errors.push("Use 3-30 lowercase letters, numbers, underscores, or hyphens for username.");
         return false;
     }
 
