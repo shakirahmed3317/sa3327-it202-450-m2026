@@ -2,14 +2,23 @@
 require_once(__DIR__ . "/../../lib/app.php");
 
 $errors = [];
-$email = "";
+$identifier = "";
 $user = false;
 
-if (isset($_POST["email"], $_POST["password"])) {
-    $email = sanitize_email($_POST["email"]);
+if (isset($_POST["identifier"], $_POST["password"])) {
+    $identifier = trim($_POST["identifier"]);
     $password = $_POST["password"];
+    $isEmailLogin = str_contains($identifier, "@");
 
-    validate_email($email, $errors);
+    if ($identifier === "") {
+        $errors[] = "Enter your email or username.";
+    } elseif ($isEmailLogin) {
+        $identifier = sanitize_email($identifier);
+        validate_email($identifier, $errors);
+    } else {
+        $identifier = strtolower($identifier);
+        validate_username($identifier, $errors);
+    }
     validate_password($password, $errors);
 
     if (empty($errors)) {
@@ -18,10 +27,11 @@ if (isset($_POST["email"], $_POST["password"])) {
             $stmt = $db->prepare(
                 "SELECT id AS user_id, email, username, password_hash
                  FROM Users
-                 WHERE email = :email
+                    WHERE username = :identifier
+                    OR email = :identifier
                  LIMIT 1"
             );
-            $stmt->execute([":email" => $email]);
+            $stmt->execute([":identifier" => $identifier]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Login query failed: " . $e->getMessage());
@@ -68,10 +78,18 @@ $message = implode("<br>", array_map("htmlspecialchars", $errors));
     <?php render_nav(); ?>
     <h1>Login</h1>
     <form method="post" action="login.php" onsubmit="return validate(this)">
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" required
-            autocomplete="email"
-            value="<?php echo htmlspecialchars($email); ?>">
+        <!-- Existing form structure stays the same. Replace only the login identifier field. -->
+        <!-- JS validation is a better place to split email-vs-username checks. -->
+        <label for="identifier">Email or Username</label>
+        <input
+            type="text"
+            id="identifier"
+            name="identifier"
+            required
+            autocomplete="username"
+            pattern="(?:[a-z0-9_\-]{3,30}|[^@\s]+@[^@\s]+\.[^@\s]+)"
+            title="Enter a username or email address"
+            value="<?php echo htmlspecialchars($identifier ?? ""); ?>">
 
         <label for="password">Password</label>
         <input id="password" name="password" type="password"
@@ -84,13 +102,29 @@ $message = implode("<br>", array_map("htmlspecialchars", $errors));
         function validate(form) {
             const errors = [];
 
-            validate_email(form.email, errors);
+            const identifier = form.identifier.value.trim();
+            // Keep this client-side shape aligned with the server-side email check.
+            // PHP validation is still the final authority after the form posts.
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const usernamePattern = /^[a-z0-9_-]{3,30}$/;
+
+            if (!identifier) {
+                errors.push("Enter your email or username.");
+            } else if (identifier.includes("@")) {
+                if (!emailPattern.test(identifier)) {
+                    errors.push("Enter a valid email address.");
+                }
+            } else if (!usernamePattern.test(identifier)) {
+                errors.push("Use 3-30 lowercase letters, numbers, underscores, or hyphens.");
+            }
+
+
             validate_password(form.password, errors);
 
             return show_validation_errors(errors);
         }
     </script>
-        <!-- Last PHP inside <body> so it captures messages queued during this request. -->
+    <!-- Last PHP inside <body> so it captures messages queued during this request. -->
     <?php render_flash_messages(); ?>
 </body>
 
