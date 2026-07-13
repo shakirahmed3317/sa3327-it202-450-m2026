@@ -22,3 +22,6 @@ $isLoggedIn = is_logged_in();
     </ul>
 </nav>
 <script src="/project/helpers.js"></script>
+<!-- Temporary milestone evidence utility.
+     Remove after all milestone submissions are complete. -->
+<script src="https://matttoegel.github.io/IT202-Utils/submission-utils.js"></script>
