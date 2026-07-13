@@ -8,6 +8,7 @@ $isLoggedIn = is_logged_in();
         <li><a href="/project/index.php">Home</a></li>
         <?php if ($isLoggedIn): ?>
             <li><a href="/project/dashboard.php">Dashboard</a></li>
+            <li><a href="/project/profile.php">Profile</a></li>
             <li><a href="/project/logout.php">Logout</a></li>
         <?php else: ?>
             <li><a href="/project/login.php">Login</a></li>
