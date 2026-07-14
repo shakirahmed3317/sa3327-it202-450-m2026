@@ -42,7 +42,7 @@ function processCars($cars, $arrayNumber) {
     // Step 2: add/commit your outline of comments.
     // Step 3: add code to solve the problem.
 
-    // sa3327 6/14
+    // sa3327 7/14
     // plan: get the current year
     // loop through each year
     // calculate car age
