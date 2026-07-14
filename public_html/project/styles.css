@@ -54,37 +54,34 @@
 /* File: public_html/project/styles.css */
 /* Update the below for Milestone 1 requirements */
 nav li {
-    display: inline;
-    background-color: rebeccapurple;
+    display: inline-block;
+    margin-right: 10px;
+    background-color: transparent;
 }
 
 nav li a {
-    color: rgb(4, 179, 120);
+    color: #0056b3;
     padding: .25rem;
+    text-decoration: none;
 }
 
 nav li a:hover {
-    color: pink;
-}
-
-nav::after {
-    text-align: center;
-    content: "(*Edit the hideous css)";
-    color: red;
+    color: #003d80;
+    text-decoration: underline;
 }
 
 label {
-    border: #212529 dashed 2px;
-    background-color: bisque;
+    border: none;
+    background-color: transparent;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 input {
-    border-radius: 25%;
-    padding: .25rem;
-}
-
-input:hover {
-    transform: rotateZ(10deg);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: .5rem;
 }
 
 form,
@@ -97,14 +94,12 @@ h3 {
 }
 
 body {
-    background-color: rgb(0, 68, 48);
-    color: rgb(255, 19, 235);
+    background-color: #f4f4f4;
+    color: #333;
+    font-family: Arial;
 }
 
 input[type="submit"]:hover {
-    transform: scale(1.15);
-}
-
-input[type="submit"]:active {
-    transform: scale(.75);
+    background-color: #0056b3;
+    color: white;
 }
