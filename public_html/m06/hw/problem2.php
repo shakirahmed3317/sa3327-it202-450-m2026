@@ -52,6 +52,20 @@ function processCars($cars, $arrayNumber) {
     $processedCars = [];
     $classic_age = 25;
     // Start Solution Edits
+    $currentYear = date("Y");
+
+    foreach ($cars as $car) {
+        $age = $currentYear - $car["year"];
+
+        $processedCars[] = [
+            "id" => $car["id"],
+            "make" => $car["make"],
+            "model" => $car["model"],
+            "year" => $car["year"],
+            "age" => $age,
+            "isClassic" => $age >= $classic_age 
+        ];
+    }
 
     // End Solution Edits
     printProblemOutput("New properties output:", $processedCars);
