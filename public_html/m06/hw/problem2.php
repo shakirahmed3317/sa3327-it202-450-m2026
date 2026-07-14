@@ -3,7 +3,7 @@
 // @ts-nocheck
 require_once(__DIR__ . "/base.php");
 
-$ucid = "YOUR_UCID_HERE"; // <-- set your UCID
+$ucid = "sa3327"; // <-- set your UCID
 
 // Don't edit the arrays below, they are used to test your code.
 $a1 = [
@@ -41,6 +41,12 @@ function processCars($cars, $arrayNumber) {
     // Step 1: sketch out a plan using comments (include UCID and date).
     // Step 2: add/commit your outline of comments.
     // Step 3: add code to solve the problem.
+
+    // sa3327 6/14
+    // plan: get the current year
+    // loop through each year
+    // calculate car age
+    // add age and isClassic to new arr
 
     $currentYear = null;
     $processedCars = [];
