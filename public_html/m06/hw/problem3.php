@@ -60,13 +60,25 @@ function joinArrays($users, $activities, $arrayNumber) {
     // Step 2: add/commit your outline of comments.
     // Step 3: add code to solve the problem.
 
-    // sa3327 6/14
+    // sa3327 7/14
     // plan: loop through each user
     // loop through each activity
     // if userid matches, combine the data into $joined
 
     $joined = [];
     // Start Solution Edits
+    foreach ($users as $user) {
+        foreach ($activities as $activity) {
+            if ($user["userId"] == $activity["userId"]) {
+                $joined[] = [
+                    "userId" => $user["userId"],
+                    "name" => $user["name"],
+                    "age" => $user["age"],
+                    "activity" => $activity["activity"]
+                ];
+            }
+        }
+    }
 
     // End Solution Edits
     printProblemOutput("Joined output:", $joined);
