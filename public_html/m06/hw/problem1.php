@@ -40,7 +40,7 @@ function processBirds($birds, $arrayNumber) {
     // Step 2: add/commit your outline of comments.
     // Step 3: add code to solve the problem.
 
-    // sa3327 6/14 
+    // sa3327 7/14 
     // plan: loop through $birds arr
     // for each bird, create a new arr with only name color and region
     // add that arr to $subset
