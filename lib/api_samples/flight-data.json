@@ -1,0 +1,56 @@
+[
+    {
+        "flnr": "UA2434",
+        "callsign": "UA2434",
+        "from": "KEWR",
+        "to": "KLAX",
+        "last_flight": "2026-07-19T00:00:00Z",
+        "count_30d": 31,
+        "delay_30d": 0.06,
+        "cancelled_30d": 0,
+        "avg_delay": 32.16,
+        "distance_km": 3945.44,
+        "distance_mi": 2451.58,
+        "distance_nm": 2130.37,
+        "avg_duration": 6.01,
+        "acft_models": [
+            "B752"
+        ]
+    },
+    {
+        "flnr": "UA2434",
+        "callsign": "UA2434",
+        "from": "KLAX",
+        "to": "KLAS",
+        "last_flight": "2021-02-26T00:00:00Z",
+        "count_30d": 14,
+        "delay_30d": 0.07,
+        "cancelled_30d": 0,
+        "avg_delay": 80.05,
+        "distance_km": 380.4,
+        "distance_mi": 236.37,
+        "distance_nm": 205.4,
+        "avg_duration": 1.15,
+        "acft_models": [
+            "B738"
+        ]
+    },
+    {
+        "flnr": "UA2434",
+        "callsign": "UA2434",
+        "from": "KRSW",
+        "to": "KORD",
+        "last_flight": "2020-09-01T00:00:00Z",
+        "count_30d": 31,
+        "delay_30d": 0.15,
+        "cancelled_30d": 0,
+        "avg_delay": 108.25,
+        "distance_km": 1808.45,
+        "distance_mi": 1123.72,
+        "distance_nm": 976.49,
+        "avg_duration": 3,
+        "acft_models": [
+            "A319"
+        ]
+    }
+]
