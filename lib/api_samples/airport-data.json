@@ -1,0 +1,16 @@
+[
+    {
+        "ident": "KEWR",
+        "icao": "KEWR",
+        "iata": "EWR",
+        "name": "New York Newark Liberty International Airport",
+        "city": "New York",
+        "country": "US",
+        "pos_lat": 40.6925,
+        "pos_lng": -74.16861,
+        "public": false,
+        "owner": "Cities of Newark & Elizabeth",
+        "operator": "Port Authority of New York and New Jersey",
+        "local_time": "2026-07-19T11:29:26.6662248-04:0"
+    }
+]
