@@ -13,4 +13,6 @@ require_once(__DIR__ . "/flash_messages.php");
 require_once(__DIR__ . "/duplicate_user_details.php");
 // require_role() depends on flash() and project_url().
 require_once(__DIR__ . "/role_helpers.php");
+require_once(__DIR__ . "/api_helper.php");
+
 ?>
