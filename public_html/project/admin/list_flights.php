@@ -6,26 +6,26 @@ require_role("Admin");
 $flights = [];
 
 try {
-    $db = getDB();
-    $stmt = $db->prepare(
+
+    $flights = selectAll(
         "SELECT
             id,
             flight_number,
             airline,
             aircraft_model,
             departure_airport,
+            departure_city,
             arrival_airport,
+            arrival_city,
             distance_km,
             is_api
         FROM Flights
         ORDER BY modified DESC
         LIMIT 10"
     );
+} catch (Throwable $e) {
 
-    $stmt->execute();
-    $flights = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    error_log("List flights failed: " . $e->getMessage());
+    error_log("List flights with helper failed: " . $e->getMessage());
     flash("Unable to load flights.", "danger");
 }
 ?>
@@ -81,10 +81,23 @@ try {
 
                         <td><?php echo htmlspecialchars($flight["aircraft_model"]); ?></td>
 
-                        <td><?php echo htmlspecialchars($flight["departure_airport"]); ?></td>
+                        <td>
+                            <?php
+                            echo htmlspecialchars($flight["departure_airport"]);
+                            if (!empty($flight["departure_city"])) {
+                                echo " - " . htmlspecialchars($flight["departure_city"]);
+                            }
+                            ?>
+                        </td>
 
-                        <td><?php echo htmlspecialchars($flight["arrival_airport"]); ?></td>
-
+                        <td>
+                            <?php
+                            echo htmlspecialchars($flight["arrival_airport"]);
+                            if (!empty($flight["arrival_city"])) {
+                                echo " - " . htmlspecialchars($flight["arrival_city"]);
+                            }
+                            ?>
+                        </td>
                         <td><?php echo htmlspecialchars($flight["distance_km"]); ?></td>
 
                         <td><?php echo $source_label; ?></td>
@@ -108,5 +121,24 @@ try {
     <?php render_flash_messages(); ?>
 
 </body>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th,
+    td {
+        border: 1px solid #ccc;
+        padding: 10px 14px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+</style>
 
 </html>
