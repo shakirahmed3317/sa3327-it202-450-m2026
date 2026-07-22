@@ -103,3 +103,13 @@ input[type="submit"]:hover {
     background-color: #0056b3;
     color: white;
 }
+
+button {
+    padding: 15px;
+    border-radius: 50px;
+    border: none;
+    margin: 10px;
+    background-color: #003d80;
+    color: white;
+    cursor: pointer;
+}
