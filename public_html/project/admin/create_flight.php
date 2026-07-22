@@ -52,17 +52,23 @@ if (isset($_POST["fetch_flight"])) {
 
         $row = [
             "flight_number" => $flight_number,
-            "callsign" => trim($_POST["callsign"] ?? ""),
+            "call_sign" => trim($_POST["call_sign"] ?? ""),
+            "airline" => trim($_POST["airline"] ?? ""),
+            "aircraft_model" => trim($_POST["aircraft_model"] ?? ""),
+            "status" => trim($_POST["status"] ?? ""),
+
             "departure_airport" => trim($_POST["departure_airport"] ?? ""),
+            "departure_city" => trim($_POST["departure_city"] ?? ""),
+            "departure_terminal" => trim($_POST["departure_terminal"] ?? ""),
+            "departure_time" => $_POST["departure_time"] ?? null,
+
             "arrival_airport" => trim($_POST["arrival_airport"] ?? ""),
-            "last_flight" => $_POST["last_flight"] ?? null,
-            "count_30d" => (int)($_POST["count_30d"] ?? 0),
-            "delay_30d" => (float)($_POST["delay_30d"] ?? 0),
-            "cancelled_30d" => (int)($_POST["cancelled_30d"] ?? 0),
-            "avg_delay" => (float)($_POST["avg_delay"] ?? 0),
+            "arrival_city" => trim($_POST["arrival_city"] ?? ""),
+            "arrival_terminal" => trim($_POST["arrival_terminal"] ?? ""),
+            "arrival_time" => $_POST["arrival_time"] ?? null,
+
             "distance_km" => (float)($_POST["distance_km"] ?? 0),
-            "avg_duration" => (float)($_POST["avg_duration"] ?? 0),
-            "aircraft_models" => trim($_POST["aircraft_models"] ?? ""),
+
             "is_api" => 0,
         ];
     } catch (InvalidArgumentException $e) {
@@ -73,71 +79,49 @@ if (isset($_POST["fetch_flight"])) {
 if ($row && empty($errors)) {
 
     $insert_row = [
-        ":flight_number" => $row["flight_number"],
-        ":call_sign" => $row["call_sign"],
-        ":airline" => $row["airline"],
-        ":aircraft_model" => $row["aircraft_model"],
-        ":status" => $row["status"],
-        ":departure_airport" => $row["departure_airport"],
-        ":departure_city" => $row["departure_city"],
-        ":departure_terminal" => $row["departure_terminal"],
-        ":departure_time" => $row["departure_time"],
-        ":arrival_airport" => $row["arrival_airport"],
-        ":arrival_city" => $row["arrival_city"],
-        ":arrival_terminal" => $row["arrival_terminal"],
-        ":arrival_time" => $row["arrival_time"],
-        ":distance_km" => $row["distance_km"],
-        ":is_api" => $row["is_api"],
+        "flight_number" => $row["flight_number"],
+        "call_sign" => $row["call_sign"],
+        "airline" => $row["airline"],
+        "aircraft_model" => $row["aircraft_model"],
+        "status" => $row["status"],
+        "departure_airport" => $row["departure_airport"],
+        "departure_city" => $row["departure_city"],
+        "departure_terminal" => $row["departure_terminal"],
+        "departure_time" => $row["departure_time"],
+        "arrival_airport" => $row["arrival_airport"],
+        "arrival_city" => $row["arrival_city"],
+        "arrival_terminal" => $row["arrival_terminal"],
+        "arrival_time" => $row["arrival_time"],
+        "distance_km" => $row["distance_km"],
+        "is_api" => $row["is_api"],
     ];
 
     try {
 
-        $db = getDB();
-        $stmt = $db->prepare(
-            "INSERT INTO Flights (
-        flight_number,
-        call_sign,
-        airline,
-        aircraft_model,
-        status,
-        departure_airport,
-        departure_city,
-        departure_terminal,
-        departure_time,
-        arrival_airport,
-        arrival_city,
-        arrival_terminal,
-        arrival_time,
-        distance_km,
-        is_api
-    ) VALUES (
-        :flight_number,
-        :call_sign,
-        :airline,
-        :aircraft_model,
-        :status,
-        :departure_airport,
-        :departure_city,
-        :departure_terminal,
-        :departure_time,
-        :arrival_airport,
-        :arrival_city,
-        :arrival_terminal,
-        :arrival_time,
-        :distance_km,
-        :is_api
-    )"
-        );
+        insert("Flights", $insert_row);
 
-        $stmt->execute($insert_row);
-
-        flash("Created flight " . $row["flight_number"], "success");
+        flash("Created flight " . $insert_row["flight_number"], "success");
         header("Location: " . project_url("admin/list_flights.php"));
         exit;
     } catch (PDOException $e) {
-        die($e->getMessage());
-        // error_log($e->getMessage());
-        // flash("Unable to create flight.", "danger");
+
+        error_log("Create flight failed: " . $e->getMessage());
+
+        $error_code = 0;
+
+        if (isset($e->errorInfo[1])) {
+            $error_code = (int)$e->errorInfo[1];
+        }
+
+        if ($error_code === 1062) {
+            flash("A flight with this information already exists. No changes were made.", "warning");
+        } else {
+            flash("Unable to create flight.", "danger");
+        }
+    } catch (Throwable $e) {
+
+        error_log("Flight insert helper failed: " . $e->getMessage());
+        flash("Unable to save flight data.", "danger");
     }
 }
 
@@ -209,38 +193,20 @@ flash_errors($errors);
                 <label for="flight_number">Flight Number</label>
                 <input id="flight_number" name="flight_number" required>
 
-                <label for="callsign">Callsign</label>
-                <input id="callsign" name="callsign">
+                <label for="airline">Airline</label>
+                <input id="airline" name="airline">
 
-                <label for="departure_airport">Departure Airport</label>
+                <label for="aircraft_model">Aircraft</label>
+                <input id="aircraft_model" name="aircraft_model">
+
+                <label for="departure_airport">Departure</label>
                 <input id="departure_airport" name="departure_airport">
 
-                <label for="arrival_airport">Arrival Airport</label>
+                <label for="arrival_airport">Arrival</label>
                 <input id="arrival_airport" name="arrival_airport">
-
-                <label for="last_flight">Last Flight</label>
-                <input id="last_flight" name="last_flight" type="date">
-
-                <label for="count_30d">Flights (30 Days)</label>
-                <input id="count_30d" name="count_30d" type="number">
-
-                <label for="delay_30d">Delay Rate</label>
-                <input id="delay_30d" name="delay_30d" type="number" step="0.01">
-
-                <label for="cancelled_30d">Cancelled</label>
-                <input id="cancelled_30d" name="cancelled_30d" type="number">
-
-                <label for="avg_delay">Average Delay</label>
-                <input id="avg_delay" name="avg_delay" type="number" step="0.01">
 
                 <label for="distance_km">Distance (km)</label>
                 <input id="distance_km" name="distance_km" type="number" step="0.01">
-
-                <label for="avg_duration">Average Duration</label>
-                <input id="avg_duration" name="avg_duration" type="number" step="0.01">
-
-                <label for="aircraft_models">Aircraft Models</label>
-                <input id="aircraft_models" name="aircraft_models">
 
                 <button
                     name="create_flight"
@@ -248,7 +214,6 @@ flash_errors($errors);
                     type="submit">
                     Create Flight
                 </button>
-
             </form>
 
         </section>
