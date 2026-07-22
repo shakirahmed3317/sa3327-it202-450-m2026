@@ -13,6 +13,8 @@ $isLoggedIn = is_logged_in();
                 <li><a href="<?php echo project_url('admin/create_role.php'); ?>">Create Role</a></li>
                 <li><a href="<?php echo project_url('admin/list_roles.php'); ?>">List Roles</a></li>
                 <li><a href="<?php echo project_url('admin/assign_roles.php'); ?>">Assign Roles</a></li>
+                <li><a href="<?php echo project_url('admin/create_flight.php'); ?>">Create Flight</a></li>
+                <li><a href="<?php echo project_url('admin/list_flights.php'); ?>">List Flights</a></li>
             <?php endif; ?>
             <li><a href="/project/logout.php">Logout</a></li>
         <?php else: ?>
