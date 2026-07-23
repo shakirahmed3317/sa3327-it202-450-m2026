@@ -1,56 +1,94 @@
 [
-    {
-        "flnr": "UA2434",
-        "callsign": "UA2434",
-        "from": "KEWR",
-        "to": "KLAX",
-        "last_flight": "2026-07-19T00:00:00Z",
-        "count_30d": 31,
-        "delay_30d": 0.06,
-        "cancelled_30d": 0,
-        "avg_delay": 32.16,
-        "distance_km": 3945.44,
-        "distance_mi": 2451.58,
-        "distance_nm": 2130.37,
-        "avg_duration": 6.01,
-        "acft_models": [
-            "B752"
-        ]
+  {
+    "greatCircleDistance": {
+      "meter": 5576626.37,
+      "km": 5576.63,
+      "mile": 3465.15,
+      "nm": 3011.14,
+      "feet": 18296018.27
     },
-    {
-        "flnr": "UA2434",
-        "callsign": "UA2434",
-        "from": "KLAX",
-        "to": "KLAS",
-        "last_flight": "2021-02-26T00:00:00Z",
-        "count_30d": 14,
-        "delay_30d": 0.07,
-        "cancelled_30d": 0,
-        "avg_delay": 80.05,
-        "distance_km": 380.4,
-        "distance_mi": 236.37,
-        "distance_nm": 205.4,
-        "avg_duration": 1.15,
-        "acft_models": [
-            "B738"
-        ]
+    "departure": {
+      "airport": {
+        "icao": "KEWR",
+        "iata": "EWR",
+        "name": "Newark Liberty",
+        "shortName": "Liberty",
+        "municipalityName": "Newark",
+        "location": {
+          "lat": 40.6925,
+          "lon": -74.1687
+        },
+        "countryCode": "US",
+        "timeZone": "America/New_York"
+      },
+      "scheduledTime": {
+        "utc": "2026-07-22 12:30Z",
+        "local": "2026-07-22 08:30-04:00"
+      },
+      "revisedTime": {
+        "utc": "2026-07-22 12:53Z",
+        "local": "2026-07-22 08:53-04:00"
+      },
+      "runwayTime": {
+        "utc": "2026-07-22 12:53Z",
+        "local": "2026-07-22 08:53-04:00"
+      },
+      "terminal": "C",
+      "runway": "22R",
+      "quality": [
+        "Basic",
+        "Live"
+      ]
     },
-    {
-        "flnr": "UA2434",
-        "callsign": "UA2434",
-        "from": "KRSW",
-        "to": "KORD",
-        "last_flight": "2020-09-01T00:00:00Z",
-        "count_30d": 31,
-        "delay_30d": 0.15,
-        "cancelled_30d": 0,
-        "avg_delay": 108.25,
-        "distance_km": 1808.45,
-        "distance_mi": 1123.72,
-        "distance_nm": 976.49,
-        "avg_duration": 3,
-        "acft_models": [
-            "A319"
-        ]
+    "arrival": {
+      "airport": {
+        "icao": "EGLL",
+        "iata": "LHR",
+        "name": "London Heathrow",
+        "shortName": "Heathrow",
+        "municipalityName": "London",
+        "location": {
+          "lat": 51.4706,
+          "lon": -0.461941
+        },
+        "countryCode": "GB",
+        "timeZone": "Europe/London"
+      },
+      "scheduledTime": {
+        "utc": "2026-07-22 19:40Z",
+        "local": "2026-07-22 20:40+01:00"
+      },
+      "revisedTime": {
+        "utc": "2026-07-22 19:13Z",
+        "local": "2026-07-22 20:13+01:00"
+      },
+      "runwayTime": {
+        "utc": "2026-07-22 19:13Z",
+        "local": "2026-07-22 20:13+01:00"
+      },
+      "terminal": "2",
+      "baggageBelt": "10",
+      "runway": "09L",
+      "quality": [
+        "Basic",
+        "Live"
+      ]
+    },
+    "lastUpdatedUtc": "2026-07-22 20:11Z",
+    "number": "UA 934",
+    "callSign": "UAL934",
+    "status": "Arrived",
+    "codeshareStatus": "IsOperator",
+    "isCargo": false,
+    "aircraft": {
+      "reg": "N665UA",
+      "modeS": "A8C88F",
+      "model": "Boeing 767-300"
+    },
+    "airline": {
+      "name": "United Airlines",
+      "iata": "UA",
+      "icao": "UAL"
     }
+  }
 ]
