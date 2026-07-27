@@ -70,7 +70,7 @@ nav li a:hover {
     text-decoration: underline;
 }
 
-label {
+/* label {
     border: none;
     background-color: transparent;
     display: block;
@@ -111,4 +111,4 @@ button {
     background-color: #003d80;
     color: white;
     cursor: pointer;
-}
+} */

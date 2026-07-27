@@ -25,6 +25,9 @@ $isLoggedIn = is_logged_in();
                 <?php if ($isLoggedIn): ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo project_url("dashboard.php"); ?>">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo project_url("profile.php"); ?>">Profile</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo project_url("guides.php"); ?>">Guides</a>
+                    </li>
                     <?php if (has_role("Admin")): ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button"
@@ -36,6 +39,14 @@ $isLoggedIn = is_logged_in();
                                 <!-- Keep Admin project-management links in this menu. -->
                                 <li><a class="dropdown-item" href="<?php echo project_url("admin/create_flight.php"); ?>">Create Flight</a></li>
                                 <li><a class="dropdown-item" href="<?php echo project_url("admin/list_flights.php"); ?>">List Flights</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">Manage Guides</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="<?php echo project_url("admin/create_guide.php"); ?>">Create Guide</a></li>
+                                <li><a class="dropdown-item" href="<?php echo project_url("admin/list_guides.php"); ?>">List Guides</a></li>
                             </ul>
                         </li>
                     <?php endif; ?>

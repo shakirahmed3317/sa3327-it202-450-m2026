@@ -1,0 +1,25 @@
+{
+  "count": 1,
+  "game": "sc2",
+  "guides": [
+    {
+      "excerpt": { "text": "Learn a safe opening and when to scout." },
+      "game": "sc2",
+      "id": "guide-001",
+      "primaryCategory": "build-orders",
+      "slug": "safe-terran-opening",
+      "source": {
+        "author": null,
+        "url": null,
+        "canonicalUrl": "https://example.com/guides/safe-terran-opening"
+      },
+      "status": "active",
+      "summary": { "text": "Build workers, protect the natural, and scout before adding production." },
+      "title": "Safe Terran Opening",
+      "video": null,
+      "opponentRace": "any",
+      "playerRace": "terran",
+      "matchup": null
+    }
+  ]
+}
