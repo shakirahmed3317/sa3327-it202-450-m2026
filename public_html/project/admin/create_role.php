@@ -55,29 +55,43 @@ if (isset($_POST["name"], $_POST["description"])) {
 <!-- TODO add the create role HTML snippet here. -->
 <!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Role</title>
+    <?php render_head("Create Role"); ?>
 </head>
+
 <body>
     <?php render_nav(); ?>
-    <h1>Create Role</h1>
+    <main class="container py-4">
+        <h1>Create Role</h1>
 
-    <form method="post">
-        <label for="name">Role Name</label>
-        <input id="name" name="name" required minlength="2" maxlength="30"
-            pattern="[A-Za-z][A-Za-z0-9 ._\-]*"
-            value="<?php echo htmlspecialchars($name); ?>">
-
-        <label for="description">Description</label>
-        <textarea id="description" name="description" maxlength="255"><?php
-            echo htmlspecialchars($description);
-        ?></textarea>
-
-        <button type="submit">Create Role</button>
-    </form>
-
+        <form method="post">
+            <?php
+            render_input([
+                "name" => "name",
+                "label" => "Role Name",
+                "value" => $name,
+                "attributes" => [
+                    "required" => true,
+                    "minlength" => 2,
+                    "maxlength" => 30,
+                ],
+            ]);
+            render_input([
+                "type" => "textarea",
+                "name" => "description",
+                "value" => $description,
+                "attributes" => [
+                    "maxlength" => 255,
+                    "rows" => 3,
+                ],
+            ]);
+            render_button(["text" => "Create Role"]);
+            ?>
+        </form>
+    </main>
     <?php render_flash_messages(); ?>
+    <?php render_scripts(); ?>
 </body>
+
 </html>
