@@ -132,46 +132,56 @@ flash_errors($errors);
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Flight</title>
+    <?php render_head("Create Flight"); ?>
 </head>
 
 <body>
+
     <?php render_nav(); ?>
 
-    <main>
+    <main class="container py-4">
 
-        <h1>Create Flight</h1>
+        <h1 class="mb-4">Create Flight</h1>
 
-        <div aria-label="Flight creation mode" role="group">
-            <button data-form-mode-button="fetch" type="button">
+        <div class="btn-group mb-4" role="group" aria-label="Flight creation mode">
+            <button
+                class="btn btn-outline-primary"
+                data-form-mode-button="fetch"
+                type="button">
                 Fetch From API
             </button>
 
-            <button data-form-mode-button="create" type="button">
+            <button
+                class="btn btn-outline-secondary"
+                data-form-mode-button="create"
+                type="button">
                 Create Manually
             </button>
         </div>
 
-        <section data-form-mode-panel="fetch" <?php if ($active_form !== "fetch") {
-                                                    echo " hidden";
-                                                } ?>>
+        <section
+            class="card p-4"
+            data-form-mode-panel="fetch"
+            <?php if ($active_form !== "fetch") echo "hidden"; ?>>
 
             <form method="post">
 
-                <h2>Fetch From API</h2>
+                <h2 class="h4 mb-3">Fetch From API</h2>
 
-                <label for="flight_fetch">
-                    Flight Number
-                </label>
+                <div class="mb-3">
+                    <label class="form-label" for="flight_fetch">
+                        Flight Number
+                    </label>
 
-                <input
-                    id="flight_fetch"
-                    name="flight_number"
-                    required>
+                    <input
+                        class="form-control"
+                        id="flight_fetch"
+                        name="flight_number"
+                        required>
+                </div>
 
                 <button
+                    class="btn btn-primary"
                     name="fetch_flight"
                     value="1"
                     type="submit">
@@ -182,38 +192,86 @@ flash_errors($errors);
 
         </section>
 
-        <section data-form-mode-panel="create" <?php if ($active_form !== "create") {
-                                                    echo " hidden";
-                                                } ?>>
+        <section
+            class="card p-4 mt-4"
+            data-form-mode-panel="create"
+            <?php if ($active_form !== "create") echo "hidden"; ?>>
 
             <form method="post">
 
-                <h2>Create Manually</h2>
+                <h2 class="h4 mb-3">Create Manually</h2>
 
-                <label for="flight_number">Flight Number</label>
-                <input id="flight_number" name="flight_number" required>
+                <div class="mb-3">
+                    <label class="form-label" for="flight_number">
+                        Flight Number
+                    </label>
+                    <input
+                        class="form-control"
+                        id="flight_number"
+                        name="flight_number"
+                        required>
+                </div>
 
-                <label for="airline">Airline</label>
-                <input id="airline" name="airline">
+                <div class="mb-3">
+                    <label class="form-label" for="airline">
+                        Airline
+                    </label>
+                    <input
+                        class="form-control"
+                        id="airline"
+                        name="airline">
+                </div>
 
-                <label for="aircraft_model">Aircraft</label>
-                <input id="aircraft_model" name="aircraft_model">
+                <div class="mb-3">
+                    <label class="form-label" for="aircraft_model">
+                        Aircraft
+                    </label>
+                    <input
+                        class="form-control"
+                        id="aircraft_model"
+                        name="aircraft_model">
+                </div>
 
-                <label for="departure_airport">Departure</label>
-                <input id="departure_airport" name="departure_airport">
+                <div class="mb-3">
+                    <label class="form-label" for="departure_airport">
+                        Departure
+                    </label>
+                    <input
+                        class="form-control"
+                        id="departure_airport"
+                        name="departure_airport">
+                </div>
 
-                <label for="arrival_airport">Arrival</label>
-                <input id="arrival_airport" name="arrival_airport">
+                <div class="mb-3">
+                    <label class="form-label" for="arrival_airport">
+                        Arrival
+                    </label>
+                    <input
+                        class="form-control"
+                        id="arrival_airport"
+                        name="arrival_airport">
+                </div>
 
-                <label for="distance_km">Distance (km)</label>
-                <input id="distance_km" name="distance_km" type="number" step="0.01">
+                <div class="mb-3">
+                    <label class="form-label" for="distance_km">
+                        Distance (km)
+                    </label>
+                    <input
+                        class="form-control"
+                        id="distance_km"
+                        name="distance_km"
+                        type="number"
+                        step="0.01">
+                </div>
 
                 <button
+                    class="btn btn-success"
                     name="create_flight"
                     value="1"
                     type="submit">
                     Create Flight
                 </button>
+
             </form>
 
         </section>
@@ -221,6 +279,7 @@ flash_errors($errors);
     </main>
 
     <?php render_flash_messages(); ?>
+    <?php render_scripts(); ?>
 
     <script>
         const flightFormButtons = document.querySelectorAll("[data-form-mode-button]");
@@ -233,6 +292,19 @@ flash_errors($errors);
             });
 
             flightFormButtons.forEach(function(button) {
+                if (button.dataset.formModeButton === mode) {
+                    button.classList.remove("btn-outline-primary", "btn-outline-secondary");
+                    button.classList.add("btn-primary");
+                } else {
+                    button.classList.remove("btn-primary");
+
+                    if (button.dataset.formModeButton === "fetch") {
+                        button.classList.add("btn-outline-primary");
+                    } else {
+                        button.classList.add("btn-outline-secondary");
+                    }
+                }
+
                 button.setAttribute(
                     "aria-pressed",
                     button.dataset.formModeButton === mode ? "true" : "false"
@@ -242,16 +314,13 @@ flash_errors($errors);
         }
 
         flightFormButtons.forEach(function(button) {
-
             button.addEventListener("click", function() {
                 showFlightForm(button.dataset.formModeButton);
             });
-
         });
 
         showFlightForm("<?php echo $active_form; ?>");
     </script>
 
 </body>
-
 </html>

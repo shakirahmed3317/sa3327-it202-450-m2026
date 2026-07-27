@@ -55,7 +55,7 @@ if (isset($_POST["action"]) && $_POST["action"] === "toggle_roles") {
                         $failedCount++;
                         error_log(
                             "Role assignment toggle failed for user $userId"
-                            . " and role $roleId: " . $e->getMessage()
+                                . " and role $roleId: " . $e->getMessage()
                         );
                     }
                 }
@@ -132,86 +132,106 @@ if ($userSearch !== "") {
 <!-- TODO add the assign roles markup snippet here. -->
 <!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assign Roles</title>
+    <?php render_head("Assign Roles"); ?>
 </head>
+
 <body>
     <?php render_nav(); ?>
-    <h1>Assign Roles</h1>
+    <main class="container py-4">
+        <h1>Assign Roles</h1>
 
-    <form method="get">
-        <label for="username">Find Users</label>
-        <input id="username" name="username" value="<?php echo htmlspecialchars($userSearch); ?>">
-        <button type="submit">Search</button>
-    </form>
+        <form method="get">
+            <?php
+            render_input([
+                "name" => "username",
+                "label" => "Find Users",
+                "value" => $userSearch,
+            ]);
+            render_button(["text" => "Search"]);
+            ?>
+        </form>
 
-    <form id="toggleForm" method="post">
-        <input type="hidden" name="action" value="toggle_roles">
-        <input type="hidden" name="username" value="<?php echo htmlspecialchars($userSearch); ?>">
-    </form>
+        <form id="toggleForm" method="post">
+            <?php
+            render_input(["type" => "hidden", "name" => "action", "value" => "toggle_roles"]);
+            render_input(["type" => "hidden", "name" => "username", "value" => $userSearch]);
+            ?>
+        </form>
 
-    <?php if ($userSearch !== ""): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Users</th>
-                    <th>Roles To Toggle</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <?php if (!empty($users)): ?>
-                            <table>
-                                <?php foreach ($users as $user): ?>
+        <?php if ($userSearch !== ""): ?>
+            <div class="row g-4">
+                <section class="col-lg-8">
+                    <h2>Users</h2>
+                    <?php if (!empty($users)): ?>
+                        <div class="table-responsive">
+                            <table class="table table-striped align-middle">
+                                <thead>
                                     <tr>
-                                        <td>
-                                            <input form="toggleForm"
-                                                   id="user_<?php echo (int)$user["id"]; ?>"
-                                                   type="checkbox"
-                                                   name="users[]"
-                                                   value="<?php echo (int)$user["id"]; ?>">
-                                            <label for="user_<?php echo (int)$user["id"]; ?>">
-                                                <?php echo htmlspecialchars($user["username"]); ?>
-                                            </label>
-                                        </td>
-                                        <td>
-                                            <?php echo htmlspecialchars($user["roles"] ?? "No roles"); ?>
-                                        </td>
+                                        <th scope="col">Select</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Current Roles</th>
                                     </tr>
-                                <?php endforeach; ?>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($users as $user): ?>
+                                        <tr>
+                                            <td>
+                                                <?php render_input([
+                                                    "type" => "checkbox",
+                                                    "id" => "user_" . (int) $user["id"],
+                                                    "name" => "users[]",
+                                                    "value" => (int) $user["id"],
+                                                    "label" => "Select " . $user["username"],
+                                                    "wrapperClass" => "mb-0",
+                                                    "labelClass" => "visually-hidden",
+                                                    "attributes" => ["form" => "toggleForm"],
+                                                ]); ?>
+                                            </td>
+                                            <td>
+                                                <?php echo htmlspecialchars($user["username"]); ?>
+                                            </td>
+                                            <td><?php echo htmlspecialchars($user["roles"] ?? "No roles"); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
                             </table>
-                        <?php else: ?>
-                            <p>No users found.</p>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if (!empty($roles)): ?>
-                            <?php foreach ($roles as $role): ?>
-                                <div>
-                                    <input form="toggleForm"
-                                           id="role_<?php echo (int)$role["id"]; ?>"
-                                           type="checkbox"
-                                           name="roles[]"
-                                           value="<?php echo (int)$role["id"]; ?>">
-                                    <label for="role_<?php echo (int)$role["id"]; ?>">
-                                        <?php echo htmlspecialchars($role["name"]); ?>
-                                    </label>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <p>No active roles found.</p>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        </div>
+                    <?php else: ?>
+                        <p>No users found.</p>
+                    <?php endif; ?>
+                </section>
 
-        <button form="toggleForm" type="submit">Toggle Selected Pairs</button>
-    <?php endif; ?>
+                <section class="col-lg-4">
+                    <h2>Roles To Toggle</h2>
+                    <?php if (!empty($roles)): ?>
+                        <?php foreach ($roles as $role): ?>
+                            <?php render_input([
+                                "type" => "checkbox",
+                                "id" => "role_" . (int) $role["id"],
+                                "name" => "roles[]",
+                                "value" => (int) $role["id"],
+                                "label" => $role["name"],
+                                "wrapperClass" => "mb-2",
+                                "attributes" => ["form" => "toggleForm"],
+                            ]); ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No active roles found.</p>
+                    <?php endif; ?>
+                </section>
+            </div>
 
+            <?php render_button([
+                "text" => "Toggle Selected Pairs",
+                "variant" => "warning",
+                "attributes" => ["form" => "toggleForm"],
+            ]); ?>
+        <?php endif; ?>
+    </main>
     <?php render_flash_messages(); ?>
+    <?php render_scripts(); ?>
 </body>
+
 </html>

@@ -33,112 +33,101 @@ try {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flights</title>
+    <?php render_head("Flights"); ?>
 </head>
 
 <body>
 
     <?php render_nav(); ?>
 
-    <main>
+    <main class="container py-4">
 
-        <h1>Flights</h1>
+        <h1 class="mb-4">Flights</h1>
 
-        <table>
+        <div class="table-responsive">
 
-            <thead>
-                <tr>
-                    <th>Flight</th>
-                    <th>Airline</th>
-                    <th>Aircraft</th>
-                    <th>Departure</th>
-                    <th>Arrival</th>
-                    <th>Distance (km)</th>
-                    <th>Source</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
+            <table class="table table-striped table-hover align-middle">
 
-            <tbody>
-
-                <?php foreach ($flights as $flight): ?>
-
-                    <?php
-                    $source_label = "Manual";
-
-                    if ($flight["is_api"]) {
-                        $source_label = "API";
-                    }
-                    ?>
-
+                <thead class="table-dark">
                     <tr>
-
-                        <td><?php echo htmlspecialchars($flight["flight_number"]); ?></td>
-
-                        <td><?php echo htmlspecialchars($flight["airline"]); ?></td>
-
-                        <td><?php echo htmlspecialchars($flight["aircraft_model"]); ?></td>
-
-                        <td>
-                            <?php
-                            echo htmlspecialchars($flight["departure_airport"]);
-                            if (!empty($flight["departure_city"])) {
-                                echo " - " . htmlspecialchars($flight["departure_city"]);
-                            }
-                            ?>
-                        </td>
-
-                        <td>
-                            <?php
-                            echo htmlspecialchars($flight["arrival_airport"]);
-                            if (!empty($flight["arrival_city"])) {
-                                echo " - " . htmlspecialchars($flight["arrival_city"]);
-                            }
-                            ?>
-                        </td>
-                        <td><?php echo htmlspecialchars($flight["distance_km"]); ?></td>
-
-                        <td><?php echo $source_label; ?></td>
-
-                        <td>
-                            <a href="edit_flight.php?id=<?php echo urlencode($flight["id"]); ?>">
-                                Edit
-                            </a>
-                        </td>
-
+                        <th>Flight</th>
+                        <th>Airline</th>
+                        <th>Aircraft</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Distance (km)</th>
+                        <th>Source</th>
+                        <th>Action</th>
                     </tr>
+                </thead>
 
-                <?php endforeach; ?>
+                <tbody>
 
-            </tbody>
+                    <?php foreach ($flights as $flight): ?>
 
-        </table>
+                        <?php
+                        $source_label = $flight["is_api"] ? "API" : "Manual";
+                        ?>
+
+                        <tr>
+
+                            <td><?php echo htmlspecialchars($flight["flight_number"]); ?></td>
+
+                            <td><?php echo htmlspecialchars($flight["airline"]); ?></td>
+
+                            <td><?php echo htmlspecialchars($flight["aircraft_model"]); ?></td>
+
+                            <td>
+                                <?php
+                                echo htmlspecialchars($flight["departure_airport"]);
+                                if (!empty($flight["departure_city"])) {
+                                    echo " - " . htmlspecialchars($flight["departure_city"]);
+                                }
+                                ?>
+                            </td>
+
+                            <td>
+                                <?php
+                                echo htmlspecialchars($flight["arrival_airport"]);
+                                if (!empty($flight["arrival_city"])) {
+                                    echo " - " . htmlspecialchars($flight["arrival_city"]);
+                                }
+                                ?>
+                            </td>
+
+                            <td><?php echo htmlspecialchars($flight["distance_km"]); ?></td>
+
+                            <td>
+                                <?php if ($flight["is_api"]): ?>
+                                    <span class="badge bg-primary">API</span>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary">Manual</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <td>
+                                <a
+                                    class="btn btn-sm btn-outline-primary"
+                                    href="edit_flight.php?id=<?php echo urlencode($flight["id"]); ?>">
+                                    Edit
+                                </a>
+                            </td>
+
+                        </tr>
+
+                    <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
 
     </main>
 
     <?php render_flash_messages(); ?>
+    <?php render_scripts(); ?>
 
 </body>
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    th,
-    td {
-        border: 1px solid #ccc;
-        padding: 10px 14px;
-        text-align: left;
-    }
-
-    th {
-        background-color: #f2f2f2;
-        font-weight: bold;
-    }
-</style>
 
 </html>

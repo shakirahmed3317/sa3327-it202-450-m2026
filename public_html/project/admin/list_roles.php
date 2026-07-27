@@ -55,47 +55,59 @@ try {
 <!-- TODO add the list roles HTML snippet here. -->
 <!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List Roles</title>
+    <?php render_head("List Roles"); ?>
 </head>
+
 <body>
     <?php render_nav(); ?>
-    <h1>List Roles</h1>
+    <main class="container py-4">
+        <h1>List Roles</h1>
 
-    <form method="get">
-        <label for="q">Search</label>
-        <input id="q" name="q" value="<?php echo htmlspecialchars($search); ?>">
-        <button type="submit">Search</button>
-    </form>
+        <form method="get">
+            <?php
+            render_input([
+                "label" => "Search",
+                "name" => "q",
+                "value" => $search,
+            ]);
+            render_button(["text" => "Search"]);
+            ?>
+        </form>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($roles as $role): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($role["name"]); ?></td>
-                    <td><?php echo htmlspecialchars($role["description"]); ?></td>
-                    <td><?php echo $role["is_active"] ? "Active" : "Inactive"; ?></td>
-                    <td>
-                        <form method="post">
-                            <input type="hidden" name="role_id" value="<?php echo (int)$role["id"]; ?>">
-                            <button type="submit"><?php echo $role["is_active"] ? "Deactivate" : "Activate"; ?></button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+        <?php
+        foreach ($roles as &$role) {
+            if ($role["is_active"]) {
+                $role["status"] = "Active";
+            } else {
+                $role["status"] = "Inactive";
+            }
+        }
 
+        $role_columns = [
+            "name" => "Name",
+            "description" => "Description",
+            "status" => "Status",
+        ];
+
+        $role_actions = [[
+            "label" => "Toggle Status",
+            "url" => "admin/list_roles.php",
+            "method" => "POST",
+            "parameter" => "role_id",
+            "variant" => "warning",
+        ]];
+
+        render_table(
+            $roles,
+            $role_columns,
+            $role_actions
+        );
+        ?>
+    </main>
     <?php render_flash_messages(); ?>
+    <?php render_scripts(); ?>
 </body>
+
 </html>
