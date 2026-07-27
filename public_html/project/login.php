@@ -39,6 +39,11 @@ if (isset($_POST["identifier"], $_POST["password"])) {
         }
     }
 
+    /*if (empty($errors) && !$user) {
+        $errors[] = "Email not found.";
+    } elseif (empty($errors) && !password_verify($password, $user["password_hash"])) {
+        $errors[] = "Invalid password.";
+    }*/
     if (
         empty($errors)
         && (!$user || !password_verify($password, $user["password_hash"]))
@@ -52,15 +57,15 @@ if (isset($_POST["identifier"], $_POST["password"])) {
         unset($user["password_hash"]);
         $user["roles"] = get_user_roles($user["user_id"]);
         $_SESSION["user"] = $user;
+        // Add flash feedback before the existing redirect.
         flash("Welcome back.", "success");
         header("Location: dashboard.php");
         exit;
     }
-    // Any validation, lookup, or password errors collected above show on the same form.
+    // Any validation, lookup, or password errors collected above redirect back to the form.
     flash_errors($errors);
-    // Keep validation failures on this request so sticky form values remain.
-    // header("Location: login.php");
-    // exit;
+    header("Location: login.php");
+    exit;
 }
 
 $message = implode("<br>", array_map("htmlspecialchars", $errors));
@@ -69,35 +74,44 @@ $message = implode("<br>", array_map("htmlspecialchars", $errors));
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <?php render_head("Login"); ?>
 </head>
 
 <body>
     <?php render_nav(); ?>
-    <h1>Login</h1>
-    <form method="post" action="login.php" onsubmit="return validate(this)">
-        <!-- Existing form structure stays the same. Replace only the login identifier field. -->
-        <!-- JS validation is a better place to split email-vs-username checks. -->
-        <label for="identifier">Email or Username</label>
-        <input
-            type="text"
-            id="identifier"
-            name="identifier"
-            required
-            autocomplete="username"
-            pattern="(?:[a-z0-9_\-]{3,30}|[^@\s]+@[^@\s]+\.[^@\s]+)"
-            title="Enter a username or email address"
-            value="<?php echo htmlspecialchars($identifier ?? ""); ?>">
+    <main class="container py-4">
+        <h1>Login</h1>
 
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password"
-            required minlength="8"
-            autocomplete="current-password">
+        <form method="post" action="login.php" onsubmit="return validate(this)">
+            <!-- Existing form structure stays the same. Replace only the login identifier field. -->
+            <!-- JS validation is a better place to split email-vs-username checks. -->
+            <?php
+            render_input([
+                "name" => "identifier",
+                "label" => "Email or Username",
+                "value" => $identifier,
+                "attributes" => [
+                    "required" => true,
+                    "autocomplete" => "username",
+                    "pattern" => "(?:[a-z0-9_\\-]{3,30}|[^@\\s]+@[^@\\s]+\\.[^@\\s]+)",
+                    "title" => "Enter a username or email address",
+                ],
+            ]);
 
-        <button type="submit">Login</button>
-    </form>
+            render_input([
+                "type" => "password",
+                "name" => "password",
+                "label" => "Password",
+                "attributes" => [
+                    "required" => true,
+                    "minlength" => 8,
+                    "autocomplete" => "current-password",
+                ],
+            ]);
+            render_button(["text" => "Login"]);
+            ?>
+        </form>
+    </main>
     <script>
         function validate(form) {
             const errors = [];
@@ -117,8 +131,6 @@ $message = implode("<br>", array_map("htmlspecialchars", $errors));
             } else if (!usernamePattern.test(identifier)) {
                 errors.push("Use 3-30 lowercase letters, numbers, underscores, or hyphens.");
             }
-
-
             validate_password(form.password, errors);
 
             return show_validation_errors(errors);
@@ -126,6 +138,7 @@ $message = implode("<br>", array_map("htmlspecialchars", $errors));
     </script>
     <!-- Last PHP inside <body> so it captures messages queued during this request. -->
     <?php render_flash_messages(); ?>
+    <?php render_scripts(); ?>
 </body>
 
 </html>

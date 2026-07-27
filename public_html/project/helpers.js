@@ -68,3 +68,7 @@ function show_validation_errors(errors) {
     errors.forEach((error) => flash(error, "danger"));
     return errors.length === 0;
 }
+
+(function(){
+    document.querySelector("html").setAttribute("data-bs-theme", "dark");
+})();
