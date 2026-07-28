@@ -68,9 +68,8 @@ if (isset($_POST["save"])) {
                 "arrival_city" => $updated_values["arrival_city"],
                 "distance_km" => $updated_values["distance_km"],
             ]);
-
-            flash("Flight updated", "success");
-            header("Location: " . project_url("admin/list_flights.php"));
+            flash("Flight updated.", "success");
+            header("Location: edit_flight.php?id=" . urlencode($id));
             exit;
         } catch (PDOException $e) {
 
@@ -88,8 +87,8 @@ flash_errors($errors);
 
 try {
 
-$flight = select(
-    "SELECT
+    $flight = select(
+        "SELECT
         flight_number,
         airline,
         status,
@@ -101,10 +100,10 @@ $flight = select(
     FROM Flights
     WHERE id = :id
     LIMIT 1",
-    [
-        "id" => $id
-    ]
-);
+        [
+            "id" => $id
+        ]
+    );
 } catch (PDOException $e) {
 
     error_log("Load flight failed: " . $e->getMessage());
@@ -125,79 +124,120 @@ if (!$flight) {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Flight</title>
+    <?php render_head("Edit Flight"); ?>
 </head>
 
 <body>
 
     <?php render_nav(); ?>
 
-    <main>
+    <main class="container py-4">
 
-        <h1>Edit <?php echo htmlspecialchars($flight["flight_number"]); ?></h1>
+        <h1 class="mb-4">
+            Edit <?php echo htmlspecialchars($flight["flight_number"]); ?>
+        </h1>
 
-        <form method="post">
+        <div class="card p-4">
 
-            <label for="airline">Airline</label>
-            <input
-                id="airline"
-                name="airline"
-                value="<?php echo htmlspecialchars($flight["airline"]); ?>"
-                required>
+            <form method="post">
 
-            <label for="status">Status</label>
-            <input
-                id="status"
-                name="status"
-                value="<?php echo htmlspecialchars($flight["status"]); ?>"
-                required>
+                <div class="mb-3">
+                    <label class="form-label" for="airline">Airline</label>
+                    <input
+                        class="form-control"
+                        id="airline"
+                        name="airline"
+                        value="<?php echo htmlspecialchars($flight["airline"]); ?>"
+                        required>
+                </div>
 
-            <label for="departure_airport">Departure Airport</label>
-            <input
-                id="departure_airport"
-                name="departure_airport"
-                value="<?php echo htmlspecialchars($flight["departure_airport"]); ?>"
-                required>
+                <div class="mb-3">
+                    <label class="form-label" for="status">Status</label>
+                    <input
+                        class="form-control"
+                        id="status"
+                        name="status"
+                        value="<?php echo htmlspecialchars($flight["status"]); ?>"
+                        required>
+                </div>
 
-            <label for="arrival_airport">Arrival Airport</label>
-            <input
-                id="arrival_airport"
-                name="arrival_airport"
-                value="<?php echo htmlspecialchars($flight["arrival_airport"]); ?>"
-                required>
-            <label for="departure_city">Departure City</label>
-            <input
-                id="departure_city"
-                name="departure_city"
-                value="<?php echo htmlspecialchars($flight["departure_city"]); ?>">
+                <div class="mb-3">
+                    <label class="form-label" for="departure_airport">Departure Airport</label>
+                    <input
+                        class="form-control"
+                        id="departure_airport"
+                        name="departure_airport"
+                        value="<?php echo htmlspecialchars($flight["departure_airport"]); ?>"
+                        required>
+                </div>
 
-            <label for="arrival_city">Arrival City</label>
-            <input
-                id="arrival_city"
-                name="arrival_city"
-                value="<?php echo htmlspecialchars($flight["arrival_city"]); ?>">
-            <label for="distance_km">Distance (km)</label>
-            <input
-                id="distance_km"
-                name="distance_km"
-                type="number"
-                min="0"
-                step="0.01"
-                value="<?php echo htmlspecialchars($flight["distance_km"]); ?>"
-                required>
+                <div class="mb-3">
+                    <label class="form-label" for="departure_city">Departure City</label>
+                    <input
+                        class="form-control"
+                        id="departure_city"
+                        name="departure_city"
+                        value="<?php echo htmlspecialchars($flight["departure_city"]); ?>">
+                </div>
 
-            <button name="save" value="1" type="submit">
-                Save Flight
-            </button>
+                <div class="mb-3">
+                    <label class="form-label" for="arrival_airport">Arrival Airport</label>
+                    <input
+                        class="form-control"
+                        id="arrival_airport"
+                        name="arrival_airport"
+                        value="<?php echo htmlspecialchars($flight["arrival_airport"]); ?>"
+                        required>
+                </div>
 
-        </form>
+                <div class="mb-3">
+                    <label class="form-label" for="arrival_city">Arrival City</label>
+                    <input
+                        class="form-control"
+                        id="arrival_city"
+                        name="arrival_city"
+                        value="<?php echo htmlspecialchars($flight["arrival_city"]); ?>">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="distance_km">Distance (km)</label>
+                    <input
+                        class="form-control"
+                        id="distance_km"
+                        name="distance_km"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value="<?php echo htmlspecialchars($flight["distance_km"]); ?>"
+                        required>
+                </div>
+
+                <div class="d-flex gap-2">
+
+                    <button
+                        class="btn btn-primary"
+                        name="save"
+                        value="1"
+                        type="submit">
+                        Save Flight
+                    </button>
+
+                    <a
+                        class="btn btn-secondary"
+                        href="<?php echo project_url("admin/list_flights.php"); ?>">
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
 
     </main>
 
     <?php render_flash_messages(); ?>
-<?php render_scripts(); ?>
+    <?php render_scripts(); ?>
 
 </body>
 

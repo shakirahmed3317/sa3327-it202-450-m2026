@@ -28,27 +28,78 @@ $isLoggedIn = is_logged_in();
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo project_url("guides.php"); ?>">Guides</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo project_url("flights.php"); ?>">Flights</a>
+                    </li>
                     <?php if (has_role("Admin")): ?>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Admin
+                            </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="<?php echo project_url("admin/create_role.php"); ?>">Create Role</a></li>
-                                <li><a class="dropdown-item" href="<?php echo project_url("admin/list_roles.php"); ?>">List Roles</a></li>
-                                <li><a class="dropdown-item" href="<?php echo project_url("admin/assign_roles.php"); ?>">Assign Roles</a></li>
-                                <!-- Keep Admin project-management links in this menu. -->
-                                <li><a class="dropdown-item" href="<?php echo project_url("admin/create_flight.php"); ?>">Create Flight</a></li>
-                                <li><a class="dropdown-item" href="<?php echo project_url("admin/list_flights.php"); ?>">List Flights</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo project_url("admin/create_role.php"); ?>">
+                                        Create Role
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo project_url("admin/list_roles.php"); ?>">
+                                        List Roles
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo project_url("admin/assign_roles.php"); ?>">
+                                        Assign Roles
+                                    </a>
+                                </li>
                             </ul>
                         </li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">Manage Guides</a>
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Flights
+                            </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="<?php echo project_url("admin/create_guide.php"); ?>">Create Guide</a></li>
-                                <li><a class="dropdown-item" href="<?php echo project_url("admin/list_guides.php"); ?>">List Guides</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo project_url("flights.php"); ?>">
+                                        View Flights
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo project_url("admin/create_flight.php"); ?>">
+                                        Create Flight
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo project_url("admin/list_flights.php"); ?>">
+                                        Manage Flights
+                                    </a>
+                                </li>
                             </ul>
                         </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Manage Guides
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo project_url("admin/create_guide.php"); ?>">
+                                        Create Guide
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo project_url("admin/list_guides.php"); ?>">
+                                        List Guides
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                     <?php endif; ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo project_url("logout.php"); ?>">Logout</a></li>
                 <?php else: ?>
