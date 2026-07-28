@@ -69,6 +69,22 @@ function show_validation_errors(errors) {
     return errors.length === 0;
 }
 
+function validate_flight_number(flightInput, errors) {
+    const value = flightInput.value.trim();
+
+    if (value === "") {
+        errors.push("Enter a flight number.");
+        return false;
+    }
+
+    if (value.length > 20) {
+        errors.push("Flight number must be 20 characters or fewer.");
+        return false;
+    }
+
+    return true;
+}
+
 (function(){
     document.querySelector("html").setAttribute("data-bs-theme", "dark");
 })();
