@@ -320,7 +320,26 @@ flash_errors($errors);
         });
 
         showFlightForm("<?php echo $active_form; ?>");
+
+        const createForm = document.querySelector(
+            '[data-form-mode-panel="create"] form'
+        );
+
+        createForm.addEventListener("submit", function(event) {
+            const errors = [];
+
+            validate_flight_number(
+                document.getElementById("flight_number"),
+                errors
+            );
+
+            if (!show_validation_errors(errors)) {
+                event.preventDefault();
+            }
+        });
+
     </script>
 
 </body>
+
 </html>
