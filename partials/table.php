@@ -1,5 +1,6 @@
 <?php
 // partials/table.php
+
 /**
  * Usage:
  * $columns = ["username" => "Username", "email" => "Email"];
@@ -88,9 +89,34 @@ if (!empty($actions)) {
                         <td class="d-flex flex-wrap gap-2">
                             <?php foreach ($actions as $action): ?>
                                 <?php
-                                // The page decides which authorized actions reach this partial.
-                                $row_key = (string) ($action["row_key"] ?? "id");
-                                $parameter = (string) ($action["parameter"] ?? "id");
+                                // Existing actions still default to one id parameter from the row's id field.
+                                $row_parameters = $action["row_parameters"] ?? [
+                                    (string) ($action["parameter"] ?? "id")
+                                    => (string) ($action["row_key"] ?? "id"),
+                                ];
+                                if (!is_array($row_parameters) || empty($row_parameters)) {
+                                    continue;
+                                }
+
+                                // A multi-column relationship action can map each request name to a row key.
+                                $row_values = [];
+                                foreach ($row_parameters as $parameter_name => $row_key) {
+                                    if (
+                                        !is_string($parameter_name)
+                                        || $parameter_name === ""
+                                        || !is_string($row_key)
+                                        || !array_key_exists($row_key, $row)
+                                    ) {
+                                        $row_values = [];
+                                        break;
+                                    }
+                                    $row_values[$parameter_name] = $row[$row_key];
+                                }
+
+                                if (empty($row_values) || !isset($action["url"])) {
+                                    continue;
+                                }
+
                                 $method = strtoupper((string) ($action["method"] ?? "GET"));
                                 $label = (string) ($action["label"] ?? "Open");
                                 $variant = (string) ($action["variant"] ?? "secondary");
@@ -101,18 +127,13 @@ if (!empty($actions)) {
                                 if (!is_array($query_parameters)) {
                                     $query_parameters = [];
                                 }
-                                $row_value = $row[$row_key] ?? null;
-
-                                if ($row_value === null || !isset($action["url"])) {
-                                    continue;
-                                }
-
                                 $url = project_url((string) $action["url"]);
                                 ?>
+
                                 <?php if ($method === "POST"): ?>
                                     <?php
                                     if ($include_parameter_in_url) {
-                                        $query_parameters[$parameter] = $row_value;
+                                        $query_parameters = array_merge($query_parameters, $row_values);
                                     }
                                     $form_url = $url;
                                     if (!empty($query_parameters)) {
@@ -121,8 +142,13 @@ if (!empty($actions)) {
                                     ?>
                                     <form method="post" action="<?php echo htmlspecialchars($form_url); ?>">
                                         <?php if (!$include_parameter_in_url): ?>
-                                            <input type="hidden" name="<?php echo htmlspecialchars($parameter); ?>"
-                                                value="<?php echo htmlspecialchars((string) $row_value); ?>">
+                                            <?php foreach ($row_values as $parameter_name => $row_value): ?>
+                                                <?php render_input([
+                                                    "type" => "hidden",
+                                                    "name" => $parameter_name,
+                                                    "value" => $row_value,
+                                                ]); ?>
+                                            <?php endforeach; ?>
                                         <?php endif; ?>
                                         <?php render_button([
                                             "text" => $label,
@@ -132,7 +158,7 @@ if (!empty($actions)) {
                                     </form>
                                 <?php else: ?>
                                     <?php
-                                    $query_parameters[$parameter] = $row_value;
+                                    $query_parameters = array_merge($query_parameters, $row_values);
                                     $href = $url . "?" . http_build_query($query_parameters);
                                     ?>
                                     <a class="btn btn-<?php echo htmlspecialchars($variant); ?> btn-sm"
