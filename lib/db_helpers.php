@@ -330,3 +330,192 @@ function select(string $query, array $params = [], array $opts = []): ?array
 
     return $rows[0];
 }
+
+/**
+ * Validates and quotes a column with an optional table or alias prefix.
+ */
+function db_qualified_identifier(string $column, string $prefix = ""): string
+{
+    $quoted_column = db_identifier($column);
+    if ($prefix === "") {
+        return $quoted_column;
+    }
+
+    $table_or_alias = rtrim($prefix, ".");
+    return db_identifier($table_or_alias) . "." . $quoted_column;
+}
+
+/**
+ * Validates a requested sort and returns trusted SQL for ORDER BY.
+ *
+ * @param string $requested_sort Submitted sort key.
+ * @param string $requested_direction Submitted asc or desc direction.
+ * @param array $sort_columns Trusted SQL columns in one of two formats:
+ * ["title", "modified"] when the request keys match the SQL columns, or
+ * ["saved" => "ug.modified"] when a request key needs a column override.
+ * @return array Validated sort key, direction, and SQL fragment.
+ */
+function build_sort_query(
+    string $requested_sort,
+    string $requested_direction,
+    array $sort_columns
+): array {
+    // A simple list uses each trusted column as both the request key and SQL.
+    $sort_column_map = $sort_columns;
+    if (array_is_list($sort_columns)) {
+        $sort_column_map = [];
+        foreach ($sort_columns as $column) {
+            $sort_column_map[$column] = $column;
+        }
+    }
+
+    if (!array_key_exists("modified", $sort_column_map)) {
+        throw new InvalidArgumentException(
+            "Sortable columns must include modified"
+        );
+    }
+
+    $sort = $requested_sort;
+    if (!array_key_exists($sort, $sort_column_map)) {
+        $sort = "modified";
+    }
+
+    $direction = strtolower($requested_direction);
+    if (!in_array($direction, ["asc", "desc"], true)) {
+        $direction = "desc";
+    }
+
+    return [
+        "sort" => $sort,
+        "direction" => $direction,
+        "sql" => $sort_column_map[$sort] . " " . strtoupper($direction),
+    ];
+}
+
+/**
+ * Reads and validates the filters, sorting, and limit for any list page.
+ *
+ * Filter names in a regular array accept any string. A key mapped to an
+ * array accepts only those values. Empty filter values are always allowed.
+ *
+ * @param array $query Query-string values, normally $_GET.
+ * @param array $config Trusted filters and sortable columns.
+ * @return array Validated filters, sort state, ORDER BY SQL, and limit.
+ */
+function build_list_query_state(array $query, array $config): array
+{
+    $filters = [];
+    foreach (($config["filters"] ?? []) as $name => $rule) {
+        if (is_int($name)) {
+            // A list entry, such as "title", accepts any string value.
+            $name = $rule;
+            $allowed_values = [];
+        } else {
+            // An associative entry accepts only the values listed in its rule.
+            $allowed_values = $rule;
+        }
+        if (!is_string($name) || $name === "" || !is_array($allowed_values)) {
+            throw new InvalidArgumentException("Invalid list filter configuration");
+        }
+
+        $value = "";
+        if (isset($query[$name]) && is_string($query[$name])) {
+            $value = trim($query[$name]);
+        }
+        if (
+            $value !== ""
+            && $allowed_values !== []
+            && !in_array($value, $allowed_values, true)
+        ) {
+            $value = "";
+        }
+        $filters[$name] = $value;
+    }
+
+    $sort_columns = $config["sort_columns"] ?? [];
+    $requested_sort = "modified";
+    if (isset($query["sort"]) && is_string($query["sort"])) {
+        $requested_sort = $query["sort"];
+    }
+    $requested_direction = "desc";
+    if (isset($query["direction"]) && is_string($query["direction"])) {
+        $requested_direction = $query["direction"];
+    }
+    $sort_state = build_sort_query(
+        $requested_sort,
+        $requested_direction,
+        $sort_columns
+    );
+
+    $limit = 10;
+    if (isset($query["limit"]) && is_string($query["limit"])) {
+        $requested_limit = filter_var(
+            $query["limit"],
+            FILTER_VALIDATE_INT,
+            ["options" => [
+                "min_range" => 1,
+                "max_range" => 100,
+            ]]
+        );
+        if ($requested_limit !== false) {
+            $limit = $requested_limit;
+        }
+    }
+
+    return [
+        "filters" => $filters,
+        "sort" => $sort_state["sort"],
+        "direction" => $sort_state["direction"],
+        "order_by" => $sort_state["sql"],
+        "limit" => $limit,
+    ];
+}
+
+/** Returns the filters supported by the StarCraft guide lists. */
+function guide_filter_rules(): array
+{
+    return [
+        "title",
+        "primary_category",
+        "game" => ["sc1", "sc2"],
+        "player_race" => ["protoss", "zerg", "terran"],
+        "opponent_race" => ["protoss", "zerg", "terran"],
+    ];
+}
+
+/**
+ * Builds the StarCraft guide conditions and PDO parameters.
+ *
+ * @param array $filters Validated guide filter values.
+ * @param string $column_prefix Trusted table or alias prefix, including the
+ * trailing period, such as "g.".
+ * @return array SQL joined by AND and its named parameters.
+ */
+function build_guide_filter_query(
+    array $filters,
+    string $column_prefix = ""
+): array {
+    $conditions = [];
+    $params = [];
+
+    foreach (["title", "primary_category"] as $name) {
+        if (!empty($filters[$name])) {
+            $column = db_qualified_identifier($name, $column_prefix);
+            $conditions[] = $column . " LIKE :" . $name;
+            $params[$name] = "%" . $filters[$name] . "%";
+        }
+    }
+
+    foreach (["game", "player_race", "opponent_race"] as $name) {
+        if (!empty($filters[$name])) {
+            $column = db_qualified_identifier($name, $column_prefix);
+            $conditions[] = "LOWER(" . $column . ") = :" . $name;
+            $params[$name] = strtolower($filters[$name]);
+        }
+    }
+
+    return [
+        "sql" => implode(" AND ", $conditions),
+        "params" => $params,
+    ];
+}

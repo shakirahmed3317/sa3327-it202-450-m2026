@@ -60,12 +60,33 @@
             ],
         ]); ?>
     </div>
+    <div class="col-md-4 col-xl-3">
+        <?php render_input([
+            "label" => "Sort By",
+            "name" => "sort",
+            "type" => "select",
+            "value" => $sort ?? "",
+            "options" => $sort_options ?? [],
+        ]); ?>
+    </div>
+    <div class="col-md-4 col-xl-2">
+        <?php render_input([
+            "label" => "Direction",
+            "name" => "direction",
+            "type" => "select",
+            "value" => $direction ?? "",
+            "options" => [
+                "asc" => "Ascending",
+                "desc" => "Descending",
+            ],
+        ]); ?>
+    </div>
     <div class="col-md-3 col-xl-2">
         <?php render_input([
             "label" => "Limit",
             "name" => "limit",
             "type" => "number",
-            "value" => $limit,
+            "value" => $limit ?? "",
             "attributes" => ["min" => 1, "max" => 100, "required" => true],
         ]); ?>
     </div>
@@ -76,6 +97,7 @@
         ]); ?>
     </div>
     <div class="col-md-3 col-xl-2">
+
         <a href="?" class="btn btn-secondary">Reset</a>
     </div>
 </form>
