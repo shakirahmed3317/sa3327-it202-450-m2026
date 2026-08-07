@@ -3,17 +3,18 @@
 require_once(__DIR__ . "/../../../lib/app.php");
 require_role("Admin");
 
-$allowed_return_pages = [
-    "guides.php" => project_url("guides.php"),
-    "admin/list_guides.php" => project_url("admin/list_guides.php"),
-];
-$return_to = $allowed_return_pages["guides.php"];
-if (isset($_GET["return_to"]) && is_string($_GET["return_to"])) {
-    $requested_return_to = $_GET["return_to"];
-    if (isset($allowed_return_pages[$requested_return_to])) {
-        $return_to = $allowed_return_pages[$requested_return_to];
-    }
-}
+$return_to = safe_project_return_url(
+    $_GET["return_to"] ?? "",
+    [
+        "guides.php",
+        "my_guides.php",
+        "profile.php",
+        "admin/list_guides.php",
+        "admin/guide_associations.php",
+        "admin/unassociated_guides.php",
+    ],
+    "admin/list_guides.php"
+);
 
 $id = (int)($_GET["id"] ?? 0);
 if ($id <= 0) {

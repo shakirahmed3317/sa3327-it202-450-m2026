@@ -3,10 +3,24 @@
 require_once(__DIR__ . "/../../../lib/app.php");
 require_role("Admin");
 
+$return_to = safe_project_return_url(
+    $_GET["return_to"] ?? "",
+    [
+        "guides.php",
+        "my_guides.php",
+        "profile.php",
+        "admin/list_guides.php",
+        "admin/guide_associations.php",
+        "admin/unassociated_guides.php",
+        "guide.php",
+    ],
+    "admin/list_guides.php"
+);
+
 $id = (int)($_GET["id"] ?? 0);
 if ($id <= 0) {
     flash("Missing guide id.", "danger");
-    header("Location: " . project_url("admin/list_guides.php"));
+    header("Location: $return_to");
     exit;
 }
 
@@ -81,7 +95,11 @@ if (isset($_POST["action"]) && $_POST["action"] === "update_guide") {
                 "source_url" => $source_url_value,
             ]);
             flash("Guide updated.", "success");
-            header("Location: " . project_url("admin/edit_guide.php?id=$id"));
+            $edit_url = project_url("admin/edit_guide.php") . "?" . http_build_query([
+                "id" => $id,
+                "return_to" => $return_to,
+            ]);
+            header("Location: " . $edit_url);
             exit;
         } catch (Throwable $e) {
             error_log("Guide update failed: " . $e->getMessage());
@@ -91,87 +109,96 @@ if (isset($_POST["action"]) && $_POST["action"] === "update_guide") {
 
     // Keep safe submitted values visible after validation errors.
     $guide = compact(
-        "id", "title", "primary_category", "player_race",
-        "opponent_race", "summary", "source_url"
+        "id",
+        "title",
+        "primary_category",
+        "player_race",
+        "opponent_race",
+        "summary",
+        "source_url"
     );
 }
 
 try {
-    $guide = select(
-        "SELECT id, title, primary_category, player_race, opponent_race, summary, source_url
-         FROM Guides WHERE id = :id LIMIT 1",
-        ["id" => $id]
-    );
+    $guide = select("SELECT id, title, primary_category, player_race, opponent_race, summary, source_url FROM Guides WHERE id = :id LIMIT 1", ["id" => $id]);
 } catch (Throwable $e) {
     error_log("Guide lookup failed: " . $e->getMessage());
     flash("The guide could not be loaded.", "danger");
-    header("Location: " . project_url("admin/list_guides.php"));
+    header("Location: $return_to");
     exit;
 }
+
 if ($guide === null) {
     flash("Guide not found.", "warning");
-    header("Location: " . project_url("admin/list_guides.php"));
+    header("Location: $return_to");
     exit;
 }
 
 flash_errors($errors);
 ?>
+<!-- Keep the shared head, nav, flash, and scripts calls from the standard page shell. -->
 <!doctype html>
 <html lang="en">
+
 <head>
-    <?php render_head("Edit StarCraft Guide"); ?>
+    <?php render_head("Edit Guide: " . htmlspecialchars($guide["title"])); ?>
 </head>
+
 <body>
     <?php render_nav(); ?>
     <main class="container py-4">
-        <h1>Edit StarCraft Guide</h1>
+        <h1>Edit Guide</h1>
         <form method="post">
-    <?php
-    render_input([
-        "name" => "title",
-        "value" => $guide["title"],
-        "attributes" => ["required" => true, "maxlength" => 150],
-    ]);
-    render_input([
-        "label" => "Primary Category",
-        "name" => "primary_category",
-        "value" => $guide["primary_category"],
-        "attributes" => ["required" => true, "maxlength" => 50],
-    ]);
-    render_input([
-        "type" => "select",
-        "name" => "player_race",
-        "value" => $guide["player_race"],
-        "options" => ["any" => "Any", "terran" => "Terran", "protoss" => "Protoss", "zerg" => "Zerg"],
-    ]);
-    render_input([
-        "type" => "select",
-        "name" => "opponent_race",
-        "value" => $guide["opponent_race"],
-        "options" => ["any" => "Any", "terran" => "Terran", "protoss" => "Protoss", "zerg" => "Zerg"],
-    ]);
-    render_input([
-        "type" => "textarea",
-        "name" => "summary",
-        "value" => $guide["summary"],
-        "attributes" => ["required" => true, "rows" => 5],
-    ]);
-    render_input([
-        "label" => "Source URL (optional)",
-        "type" => "url",
-        "name" => "source_url",
-        "value" => $guide["source_url"],
-        "attributes" => ["maxlength" => 500],
-    ]);
-    render_button([
-        "text" => "Update Guide",
-        "variant" => "warning",
-        "attributes" => ["name" => "action", "value" => "update_guide"],
-    ]);
-    ?>
+            <?php
+            render_input([
+                "name" => "title",
+                "value" => $guide["title"],
+                "attributes" => ["required" => true, "maxlength" => 150],
+            ]);
+            render_input([
+                "label" => "Primary Category",
+                "name" => "primary_category",
+                "value" => $guide["primary_category"],
+                "attributes" => ["required" => true, "maxlength" => 50],
+            ]);
+            render_input([
+                "type" => "select",
+                "name" => "player_race",
+                "value" => $guide["player_race"],
+                "options" => ["any" => "Any", "terran" => "Terran", "protoss" => "Protoss", "zerg" => "Zerg"],
+            ]);
+            render_input([
+                "type" => "select",
+                "name" => "opponent_race",
+                "value" => $guide["opponent_race"],
+                "options" => ["any" => "Any", "terran" => "Terran", "protoss" => "Protoss", "zerg" => "Zerg"],
+            ]);
+            render_input([
+                "type" => "textarea",
+                "name" => "summary",
+                "value" => $guide["summary"],
+                "attributes" => ["required" => true, "rows" => 5],
+            ]);
+            render_input([
+                "label" => "Source URL (optional)",
+                "type" => "url",
+                "name" => "source_url",
+                "value" => $guide["source_url"],
+                "attributes" => ["maxlength" => 500],
+            ]);
+            render_button([
+                "text" => "Update Guide",
+                "variant" => "warning",
+                "attributes" => ["name" => "action", "value" => "update_guide"],
+            ]);
+
+            ?>
+            <a class="btn btn-secondary"
+                href="<?php echo htmlspecialchars($return_to); ?>">Back</a>
         </form>
     </main>
     <?php render_flash_messages(); ?>
     <?php render_scripts(); ?>
 </body>
+
 </html>

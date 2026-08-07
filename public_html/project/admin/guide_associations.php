@@ -112,15 +112,23 @@ $relationship_columns = [
     "saved_on" => "Saved",
 ];
 
-$return_to = $_SERVER["REQUEST_URI"]
-    ?? project_url("admin/guide_associations.php");
+$return_to = current_project_request_url("admin/guide_associations.php");
 $relationship_actions = [
     [
         "label" => "View",
         "url" => "guide.php",
         "row_key" => "guide_id",
         "parameter" => "id",
+        "query_parameters" => ["return_to" => $return_to],
         "variant" => "primary",
+    ],
+    [
+        "label" => "View User",
+        "url" => "profile.php",
+        "row_key" => "user_id",
+        "parameter" => "id",
+        "query_parameters" => ["return_to" => $return_to],
+        "variant" => "secondary",
     ],
     [
         "label" => "Remove",
@@ -134,6 +142,7 @@ $relationship_actions = [
         "variant" => "danger",
     ],
 ];
+
 ?>
 <!doctype html>
 <html lang="en">

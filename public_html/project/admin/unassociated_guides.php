@@ -89,9 +89,20 @@ $guide_columns = [
     "opponent_race" => "Opponent",
     "source" => "Source",
 ];
+$return_to = current_project_request_url("admin/unassociated_guides.php");
 $guide_actions = [
-    ["label" => "View", "url" => "guide.php", "variant" => "primary"],
-    ["label" => "Edit", "url" => "admin/edit_guide.php", "variant" => "warning"],
+    [
+        "label" => "View",
+        "url" => "guide.php",
+        "query_parameters" => ["return_to" => $return_to],
+        "variant" => "primary",
+    ],
+    [
+        "label" => "Edit",
+        "url" => "admin/edit_guide.php",
+        "query_parameters" => ["return_to" => $return_to],
+        "variant" => "warning",
+    ],
 ];
 ?>
 <!doctype html>

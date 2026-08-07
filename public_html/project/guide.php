@@ -1,11 +1,23 @@
 <?php
 // public_html/project/guide.php
 require_once(__DIR__ . "/../../lib/app.php");
+$return_to = safe_project_return_url(
+    $_GET["return_to"] ?? "",
+    [
+        "guides.php",
+        "my_guides.php",
+        "profile.php",
+        "admin/list_guides.php",
+        "admin/guide_associations.php",
+        "admin/unassociated_guides.php",
+    ],
+    "guides.php"
+);
 
 $id = (int)($_GET["id"] ?? 0);
 if ($id <= 0) {
     flash("Missing guide id.", "danger");
-    header("Location: " . project_url("guides.php"));
+    header("Location: " . project_url($return_to));
     exit;
 }
 $user_id = get_user_id(); // returns 0 when not logged in
@@ -32,13 +44,13 @@ try {
 } catch (Throwable $e) {
     error_log("Guide lookup failed: " . $e->getMessage());
     flash("The guide could not be loaded.", "danger");
-    header("Location: " . project_url("guides.php"));
+    header("Location: " . project_url($return_to));
     exit;
 }
 
 if ($guide === null) {
     flash("Guide not found.", "warning");
-    header("Location: " . project_url("guides.php"));
+    header("Location: " . project_url($return_to));
     exit;
 }
 ?>
@@ -53,6 +65,7 @@ if ($guide === null) {
         <?php
         $card_options = [
             "show_detail_view" => true,
+            "return_to" => $return_to,
         ];
         render_guide_card($guide, $card_options);
         ?>

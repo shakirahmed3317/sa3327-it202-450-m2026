@@ -1,7 +1,11 @@
 <?php
 // partials/guide_card.php
 // List usage: render_guide_card($guide);
-// Single-page usage: render_guide_card($guide, ["show_detail_view" => true]);
+// Single-page usage:
+// render_guide_card($guide, [
+//     "show_detail_view" => true,
+//     "return_to" => $return_to,
+// ]);
 $options = $options ?? [];
 $guide = $guide ?? [];
 $show_detail_view = (bool) ($options["show_detail_view"] ?? false);
@@ -10,13 +14,37 @@ $has_relationship_state = array_key_exists("is_saved", $guide);
 $source_url = sc_nullable_url($guide["source_url"] ?? null);
 $video_url = sc_nullable_url($guide["video"] ?? null);
 
+$allowed_list_paths = [
+    "guides.php",
+    "my_guides.php",
+    "profile.php",
+    "admin/list_guides.php",
+    "admin/guide_associations.php",
+    "admin/unassociated_guides.php",
+];
+$current_url = current_project_request_url("guides.php");
+$return_to = safe_project_return_url(
+    $options["return_to"] ?? "",
+    $allowed_list_paths,
+    "guides.php"
+);
+
+// List actions return to the current filtered list. A detail page returns to
+// itself after Save/Edit, but returns to its source list after Delete or Back.
+$action_return_url = $current_url;
+$delete_return_url = $show_detail_view ? $return_to : $current_url;
 $guide_url = project_url("guide.php") . "?" . http_build_query([
     "id" => $guide["id"],
+    "return_to" => $current_url,
 ]);
-$return_to = $_SERVER["REQUEST_URI"] ?? $guide_url;
-if (!is_string($return_to) || $return_to === "") {
-    $return_to = $guide_url;
-}
+$edit_url = project_url("admin/edit_guide.php") . "?" . http_build_query([
+    "id" => $guide["id"],
+    "return_to" => $action_return_url,
+]);
+$delete_url = project_url("admin/delete_guide.php") . "?" . http_build_query([
+    "id" => $guide["id"],
+    "return_to" => $delete_return_url,
+]);
 ?>
 <article class="card h-100">
     <div class="card-body d-flex flex-column">
@@ -99,7 +127,7 @@ if (!is_string($return_to) || $return_to === "") {
                     render_input([
                         "type" => "hidden",
                         "name" => "return_to",
-                        "value" => $return_to,
+                        "value" => $action_return_url,
                     ]);
 
                     $is_saved = (int) ($guide["is_saved"] ?? 0);
@@ -123,14 +151,9 @@ if (!is_string($return_to) || $return_to === "") {
             <?php endif; ?>
             <?php if (has_role("Admin")): ?>
                 <a class="btn btn-warning"
-                    href="<?php echo project_url("admin/edit_guide.php?id=" . (int) $guide["id"]); ?>">
-                    Edit
-                </a>
+                    href="<?php echo htmlspecialchars($edit_url); ?>">Edit</a>
                 <form method="post"
-                    action="<?php echo project_url(
-                        "admin/delete_guide.php?id=" . (int) $guide["id"]
-                            . "&return_to=guides.php"
-                    ); ?>">
+                    action="<?php echo htmlspecialchars($delete_url); ?>">
                     <?php render_button([
                         "text" => "Delete",
                         "variant" => "danger",
@@ -139,7 +162,7 @@ if (!is_string($return_to) || $return_to === "") {
             <?php endif; ?>
             <?php if ($show_detail_view): ?>
                 <a class="btn btn-secondary"
-                    href="<?php echo project_url("guides.php"); ?>">Back To Guides</a>
+                    href="<?php echo htmlspecialchars($return_to); ?>">Back</a>
             <?php endif; ?>
         </div>
     </div>
