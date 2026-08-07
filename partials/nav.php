@@ -19,6 +19,12 @@ $isLoggedIn = is_logged_in();
                     <a class="nav-link" href="<?php echo project_url("index.php"); ?>">Home</a>
                 </li>
                 <!-- Keep public project-entity links in this list. -->
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo project_url("guides.php"); ?>">Guides</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo project_url("flights.php"); ?>">Flights</a>
+                </li>
             </ul>
 
             <ul class="navbar-nav ms-auto">
@@ -26,11 +32,11 @@ $isLoggedIn = is_logged_in();
                     <li class="nav-item"><a class="nav-link" href="<?php echo project_url("dashboard.php"); ?>">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo project_url("profile.php"); ?>">Profile</a></li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo project_url("guides.php"); ?>">Guides</a>
+                        <a class="nav-link" href="<?php echo project_url("my_guides.php"); ?>">
+                            My Saved Guides
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo project_url("flights.php"); ?>">Flights</a>
-                    </li>
+
                     <?php if (has_role("Admin")): ?>
 
                         <li class="nav-item dropdown">
@@ -60,7 +66,7 @@ $isLoggedIn = is_logged_in();
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                Flights
+                                Manage Flights
                             </a>
                             <ul class="dropdown-menu">
                                 <li>

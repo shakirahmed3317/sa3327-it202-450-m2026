@@ -1,17 +1,12 @@
 <?php
-// lib/render_functions.php
-
 function render_nav()
 {
     require(__DIR__ . "/../partials/nav.php");
 }
-
 function render_flash_messages()
 {
     require(__DIR__ . "/../partials/flash.php");
 }
-
-// Add the new Module 08 functions below the existing render helpers.
 /**
  * Renders the shared document metadata and styles for one page.
  *
@@ -97,13 +92,53 @@ function render_table(
 }
 
 /**
- * Renders the reference guide-list filters used by public and Admin guide pages.
+ * Renders the shared guide filters, limit, and sorting controls.
  *
- * @param array $filters Current title, category, game, and race filters.
- * @param int $limit Valid maximum number of guide rows to display.
+ * @param array $filters Validated guide filter values.
+ * @param int $limit Valid maximum number of rows to display.
+ * @param string $sort Validated sort key.
+ * @param string $direction Validated sort direction.
+ * @param array $sort_options Labels for the allowed sort keys.
  */
-function render_guide_search(array $filters, int $limit): void
-{
+function render_guide_search(
+    array $filters,
+    int $limit,
+    string $sort,
+    string $direction,
+    array $sort_options
+): void {
     require(__DIR__ . "/../partials/guide_search.php");
+}
+
+/** Renders the current row count compared with all filtered matches. */
+function render_result_summary(int $shown_count, int $matching_count): void
+{
+    require(__DIR__ . "/../partials/result_summary.php");
+}
+
+/**
+ * Renders one StarCraft guide as either a list card or detail card.
+ *
+ * @param array $guide Guide data selected from the database.
+ * @param array $options Supports show_detail_view and show_saved_on.
+ */
+function render_guide_card(array $guide, array $options = []): void
+{
+    require(__DIR__ . "/../partials/guide_card.php");
+}
+
+/**
+ * Renders the reference project's StarCraft guide-card grid.
+ *
+ * @param array $guides Guide rows to display.
+ * @param array $card_options Options passed to every guide card.
+ * @param string $empty_message Message displayed when no guides match.
+ */
+function render_grid(
+    array $guides,
+    array $card_options = [],
+    string $empty_message = "No guides matched the selected filters."
+): void {
+    require(__DIR__ . "/../partials/guide_grid.php");
 }
 ?>
