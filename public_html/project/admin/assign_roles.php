@@ -7,7 +7,13 @@ $userSearch = trim($_GET["username"] ?? $_POST["username"] ?? "");
 $users = [];
 $roles = [];
 
+$redirect = "admin/assign_roles.php";
+if ($userSearch !== "") {
+    $redirect .= "?username=" . rawurlencode($userSearch);
+}
+
 if (isset($_POST["action"]) && $_POST["action"] === "toggle_roles") {
+    require_csrf_token(project_url($redirect));
     // array_map("intval", ...) converts checkbox values from strings to integers.
     // array_filter(...) removes invalid ids after conversion.
     // array_unique(...) avoids toggling the same pair twice from duplicate input.
@@ -155,6 +161,7 @@ if ($userSearch !== "") {
 
         <form id="toggleForm" method="post">
             <?php
+            render_csrf_input();
             render_input(["type" => "hidden", "name" => "action", "value" => "toggle_roles"]);
             render_input(["type" => "hidden", "name" => "username", "value" => $userSearch]);
             ?>

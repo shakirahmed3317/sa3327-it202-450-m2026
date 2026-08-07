@@ -26,7 +26,7 @@ $return_url = safe_project_return_url(
     ["guides.php", "my_guides.php", "guide.php", "profile.php"],
     "guides.php"
 );
-
+require_csrf_token($return_url);
 $guide_id = filter_input(INPUT_POST, "guide_id", FILTER_VALIDATE_INT);
 if (!$guide_id) {
     flash("Choose a valid guide.", "warning");

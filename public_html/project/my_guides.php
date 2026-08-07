@@ -109,7 +109,9 @@ $shown_count = count($guides);
             <?php if ($matching_count > 0): ?>
                 <form method="post"
                     action="<?php echo project_url("internal/clear_saved_guides.php"); ?>">
-                    <?php render_button([
+                    <?php
+                    render_csrf_input();
+                    render_button([
                         "text" => "Remove All Saved Guides",
                         "variant" => "danger",
                     ]); ?>

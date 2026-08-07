@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: " . $return_to);
     exit;
 }
-
+require_csrf_token($return_to);
 try {
     $db = getDB();
     $stmt = $db->prepare("DELETE FROM Guides WHERE id = :id LIMIT 1");

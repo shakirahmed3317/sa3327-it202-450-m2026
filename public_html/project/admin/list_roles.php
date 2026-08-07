@@ -6,6 +6,7 @@ $search = trim($_GET["q"] ?? "");
 $roles = [];
 
 if (isset($_POST["role_id"])) {
+    require_csrf_token(project_url("admin/list_roles.php"));
     $role_id = (int)$_POST["role_id"];
 
     if ($role_id !== 0) {

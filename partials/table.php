@@ -141,6 +141,7 @@ if (!empty($actions)) {
                                     }
                                     ?>
                                     <form method="post" action="<?php echo htmlspecialchars($form_url); ?>">
+                                        <?php render_csrf_input();  ?>
                                         <?php if (!$include_parameter_in_url): ?>
                                             <?php foreach ($row_values as $parameter_name => $row_value): ?>
                                                 <?php render_input([

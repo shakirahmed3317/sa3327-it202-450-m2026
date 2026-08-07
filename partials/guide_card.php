@@ -119,6 +119,7 @@ $delete_url = project_url("admin/delete_guide.php") . "?" . http_build_query([
                 <form method="post"
                     action="<?php echo project_url("internal/toggle_saved_guide.php"); ?>">
                     <?php
+                    render_csrf_input();
                     render_input([
                         "type" => "hidden",
                         "name" => "guide_id",
@@ -154,7 +155,9 @@ $delete_url = project_url("admin/delete_guide.php") . "?" . http_build_query([
                     href="<?php echo htmlspecialchars($edit_url); ?>">Edit</a>
                 <form method="post"
                     action="<?php echo htmlspecialchars($delete_url); ?>">
-                    <?php render_button([
+                    <?php
+                    render_csrf_input();
+                    render_button([
                         "text" => "Delete",
                         "variant" => "danger",
                     ]); ?>

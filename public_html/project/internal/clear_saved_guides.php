@@ -2,6 +2,7 @@
 // public_html/project/internal/clear_saved_guides.php
 require_once(__DIR__ . "/../../../lib/app.php");
 
+require_csrf_token(project_url("my_guides.php"));
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     flash("That saved-guide action is not available.", "warning");
     header("Location: " . project_url("my_guides.php"));
