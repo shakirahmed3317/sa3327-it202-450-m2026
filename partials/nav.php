@@ -103,6 +103,18 @@ $isLoggedIn = is_logged_in();
                                         List Guides
                                     </a>
                                 </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="<?php echo project_url("admin/guide_associations.php"); ?>">
+                                        Guide Associations
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="<?php echo project_url("admin/unassociated_guides.php"); ?>">
+                                        Unassociated Guides
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 

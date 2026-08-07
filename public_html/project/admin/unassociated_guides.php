@@ -1,7 +1,11 @@
 <?php
-// public_html/project/guides.php
-require_once(__DIR__ . "/../../lib/app.php");
+// public_html/project/admin/unassociated_guides.php
+// Start with a copy of admin/list_guides.php. Replace its complete PHP
+// processing block above <!doctype html> with this snippet.
+require_once(__DIR__ . "/../../../lib/app.php");
+require_role("Admin");
 
+// Start with the unchanged list_guides.php filter and sort configuration.
 $sort_options = [
     "modified" => "Recently Updated",
     "title" => "Title",
@@ -10,14 +14,11 @@ $sort_options = [
     "player_race" => "Player Race",
     "opponent_race" => "Opponent Race",
 ];
-
 $allowed_sort_columns = array_keys($sort_options);
 $list_config = [
     "filters" => guide_filter_rules(),
-    // Each submitted sort key matches its trusted SQL column on these pages.
     "sort_columns" => $allowed_sort_columns,
 ];
-
 $list_state = build_list_query_state($_GET, $list_config);
 $filters = $list_state["filters"];
 $sort = $list_state["sort"];
@@ -30,18 +31,21 @@ $page = $pagination_state["page"];
 $offset = $pagination_state["offset"];
 
 $filter_query = build_guide_filter_query($filters);
-$where = "";
+$where = "WHERE NOT EXISTS (
+    SELECT 1
+    FROM UserGuides ug
+    WHERE ug.guide_id = Guides.id
+      AND ug.is_active = 1
+)";
 if (!empty($filter_query["sql"])) {
-    $where = "WHERE " . $filter_query["sql"];
+    $where .= " AND " . $filter_query["sql"];
 }
 $params = $filter_query["params"];
 
 $matching_count = 0;
 $total_pages = 1;
 $guides = [];
-
 try {
-    // The count uses the same filters but no ORDER BY or LIMIT.
     $count_row = select(
         "SELECT COUNT(*) AS total
          FROM Guides
@@ -51,8 +55,6 @@ try {
     );
     $matching_count = (int) ($count_row["total"] ?? 0);
     $total_pages = pagination_total_pages($matching_count, $limit);
-
-    // A removal may leave the requested page beyond the new final page.
     if ($page > $total_pages) {
         $page = $total_pages;
         $offset = pagination_offset($page, $limit);
@@ -62,44 +64,45 @@ try {
         "limit" => $limit,
         "offset" => $offset,
     ]);
-    $user_id = get_user_id(); // returns 0 when not logged in
-    $list_params = array_merge($list_params, ["user_id" => $user_id]);
-
     $guides = selectAll(
-        "SELECT g.id, g.title, g.excerpt, g.game, g.primary_category,
-            g.status, g.summary, g.source_author, g.source_url, g.video,
-            g.player_race, g.opponent_race, g.matchup,
-            IF(g.api_id IS NULL, 'Manual', 'API') AS source,
-            EXISTS (
-                SELECT 1
-                FROM UserGuides ug
-                WHERE ug.guide_id = g.id
-                  AND ug.user_id = :user_id
-                  AND ug.is_active = 1
-            ) AS is_saved
-     FROM Guides g
-     $where
-     ORDER BY $order_by, g.id ASC
-     LIMIT :limit OFFSET :offset",
+        "SELECT id, title, excerpt, game, primary_category, status,
+                summary, source_author, source_url, video,
+                player_race, opponent_race, matchup,
+                IF(api_id IS NULL, 'Manual', 'API') AS source
+         FROM Guides
+         $where
+         ORDER BY $order_by, id ASC
+         LIMIT :limit OFFSET :offset",
         $list_params
     );
 } catch (Throwable $e) {
-    error_log("Guide list failed: " . $e->getMessage());
-    flash("Guides could not be loaded.", "danger");
+    error_log("Unassociated guide list failed: " . $e->getMessage());
+    flash("Unassociated guides could not be loaded.", "danger");
 }
-
 $shown_count = count($guides);
 
+// Keep the existing list_guides.php columns and remove only the Delete action.
+$guide_columns = [
+    "title" => "Title",
+    "primary_category" => "Category",
+    "player_race" => "Player",
+    "opponent_race" => "Opponent",
+    "source" => "Source",
+];
+$guide_actions = [
+    ["label" => "View", "url" => "guide.php", "variant" => "primary"],
+    ["label" => "Edit", "url" => "admin/edit_guide.php", "variant" => "warning"],
+];
 ?>
 <!doctype html>
 <html lang="en">
 
-<head><?php render_head("StarCraft Guides"); ?></head>
+<head><?php render_head("Unassociated Guides"); ?></head>
 
 <body>
     <?php render_nav(); ?>
     <main class="container py-4">
-        <h1>StarCraft Guides</h1>
+        <h1>Unassociated Guides</h1>
         <?php render_guide_search(
             $filters,
             $limit,
@@ -107,19 +110,20 @@ $shown_count = count($guides);
             $direction,
             $sort_options
         ); ?>
+        <?php render_result_summary($shown_count, $matching_count); ?>
+        <?php render_table(
+            $guides,
+            $guide_columns,
+            $guide_actions,
+            "No unassociated guides matched the selected filters."
+        ); ?>
         <?php
-        render_result_summary($shown_count, $matching_count);
-        render_grid($guides);
         $query_params = array_merge($filters, [
             "sort" => $sort,
             "direction" => $direction,
             "limit" => $limit,
         ]);
-        render_pagination(
-            $page,
-            $total_pages,
-            $query_params
-        );
+        render_pagination($page, $total_pages, $query_params);
         ?>
     </main>
     <?php render_flash_messages(); ?>

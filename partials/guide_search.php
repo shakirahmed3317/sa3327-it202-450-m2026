@@ -60,6 +60,16 @@
             ],
         ]); ?>
     </div>
+    <?php if (array_key_exists("username", $filters ?? [])): ?>
+        <div class="col-md-6 col-xl-3">
+            <?php render_input([
+                "label" => "Username",
+                "name" => "username",
+                "value" => $filters["username"] ?? "",
+                "attributes" => ["maxlength" => 60],
+            ]); ?>
+        </div>
+    <?php endif; ?>
     <div class="col-md-4 col-xl-3">
         <?php render_input([
             "label" => "Sort By",
