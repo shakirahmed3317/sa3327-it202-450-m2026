@@ -141,4 +141,18 @@ function render_grid(
 ): void {
     require(__DIR__ . "/../partials/guide_grid.php");
 }
+/**
+ * Renders page controls while preserving the active list values.
+ *
+ * @param int $page Current page number.
+ * @param int $total_pages Number of available pages.
+ * @param array $query_params Active filters, sort choices, and limit.
+ */
+function render_pagination(
+    int $page,
+    int $total_pages,
+    array $query_params = []
+): void {
+    require(__DIR__ . "/../partials/pagination.php");
+}
 ?>
