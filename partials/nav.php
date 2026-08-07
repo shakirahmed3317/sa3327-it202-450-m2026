@@ -125,7 +125,14 @@ $isLoggedIn = is_logged_in();
                         </li>
 
                     <?php endif; ?>
-                    <li class="nav-item"><a class="nav-link" href="<?php echo project_url("logout.php"); ?>">Logout</a></li>
+                    <form method="post"
+                        action="<?php echo project_url("logout.php"); ?>"
+                        class="d-inline">
+                        <?php render_csrf_input(); ?>
+                        <button type="submit" class="nav-link border-0 bg-transparent">
+                            Logout
+                        </button>
+                    </form>
                 <?php else: ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo project_url("login.php"); ?>">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo project_url("register.php"); ?>">Register</a></li>
