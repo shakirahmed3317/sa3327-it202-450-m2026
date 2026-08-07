@@ -27,6 +27,7 @@ if ($id <= 0) {
 $errors = [];
 $guide = null;
 if (isset($_POST["action"]) && $_POST["action"] === "update_guide") {
+    require_csrf_token($return_to);
     $title = "";
     $primary_category = "";
     $player_race = "";
@@ -150,6 +151,7 @@ flash_errors($errors);
         <h1>Edit Guide</h1>
         <form method="post">
             <?php
+            render_csrf_input();
             render_input([
                 "name" => "title",
                 "value" => $guide["title"],

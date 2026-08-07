@@ -105,6 +105,7 @@ if (
     && isset($_POST["action"], $_POST["username"], $_POST["email"])
     && $_POST["action"] === "details"
 ) {
+    require_csrf_token(project_url("profile.php") . "?edit");
     $username = trim($_POST["username"]);
     $email = sanitize_email($_POST["email"]);
 
@@ -152,6 +153,7 @@ if (
     && isset($_POST["action"], $_POST["current_password"], $_POST["new_password"], $_POST["confirm_password"])
     && $_POST["action"] === "password"
 ) {
+    require_csrf_token(project_url("profile.php") . "?edit");
     $currentPassword = $_POST["current_password"];
     $newPassword = $_POST["new_password"];
     $confirmPassword = $_POST["confirm_password"];
@@ -225,6 +227,7 @@ if (
         <?php if ($is_edit): ?>
             <form method="post" action="?edit" onsubmit="return validate(this);">
                 <?php
+                render_csrf_input();
                 render_input(["type" => "hidden", "name" => "action", "value" => "details"]);
                 render_input([
                     "name" => "username",
@@ -250,6 +253,7 @@ if (
 
             <form method="post" action="?edit" onsubmit="return validate(this);">
                 <?php
+                render_csrf_input();
                 render_input(["type" => "hidden", "name" => "action", "value" => "password"]);
                 render_input([
                     "type" => "password",

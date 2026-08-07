@@ -5,6 +5,7 @@ $email = "";
 $username = "";
 
 if (isset($_POST["email"], $_POST["username"], $_POST["password"], $_POST["confirm_password"])) {
+    require_csrf_token(project_url("register.php"));
     $email = sanitize_email($_POST["email"]);
     $username = trim($_POST["username"]);
     $password = $_POST["password"];
@@ -67,6 +68,7 @@ if (isset($_POST["email"], $_POST["username"], $_POST["password"], $_POST["confi
         <form method="post" action="register.php" onsubmit="return validate(this);">
 
             <?php
+            render_csrf_input();
             render_input([
                 "type" => "email",
                 "name" => "email",

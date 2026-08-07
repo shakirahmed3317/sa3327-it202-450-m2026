@@ -10,6 +10,7 @@ $users = [];
 $guides = [];
 
 if (isset($_POST["action"]) && $_POST["action"] === "toggle_associations") {
+    require_csrf_token(project_url($redirect));
     $submittedUserIds = $_POST["user_ids"] ?? [];
     $submittedGuideIds = $_POST["guide_ids"] ?? [];
     if (!is_array($submittedUserIds) || !is_array($submittedGuideIds)) {
@@ -155,6 +156,7 @@ try {
         </form>
         <form id="toggleForm" method="post">
             <?php
+            render_csrf_input();
             render_input([
                 "type" => "hidden",
                 "name" => "action",

@@ -26,7 +26,7 @@ if (
 ) {
     $return_url = $requested_return;
 }
-
+require_csrf_token($return_url); 
 $user_id = filter_input(INPUT_POST, "user_id", FILTER_VALIDATE_INT);
 $guide_id = filter_input(INPUT_POST, "guide_id", FILTER_VALIDATE_INT);
 if (!$user_id || !$guide_id) {

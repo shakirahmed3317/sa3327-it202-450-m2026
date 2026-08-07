@@ -155,4 +155,13 @@ function render_pagination(
 ): void {
     require(__DIR__ . "/../partials/pagination.php");
 }
-?>
+
+/** Renders the current session's CSRF token as a hidden form field. */
+function render_csrf_input(): void
+{
+    render_input([
+        "type" => "hidden",
+        "name" => "csrf_token",
+        "value" => csrf_token(),
+    ]);
+}
