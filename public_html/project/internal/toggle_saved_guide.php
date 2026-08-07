@@ -21,29 +21,11 @@ if (!is_logged_in()) {
     exit;
 }
 
-$return_url = project_url("guides.php");
-$requested_return = $_POST["return_to"] ?? "";
-$allowed_return_paths = [
-    project_url("guides.php"),
-    project_url("my_guides.php"),
-    project_url("guide.php"),
-];
-// Reject line breaks that could alter the redirect header, then allow only known local pages.
-if (
-    is_string($requested_return)
-    && !str_contains($requested_return, "\r")
-    && !str_contains($requested_return, "\n")
-) {
-    foreach ($allowed_return_paths as $allowed_path) {
-        if (
-            $requested_return === $allowed_path
-            || str_starts_with($requested_return, $allowed_path . "?")
-        ) {
-            $return_url = $requested_return;
-            break;
-        }
-    }
-}
+$return_url = safe_project_return_url(
+    $_POST["return_to"] ?? "",
+    ["guides.php", "my_guides.php", "guide.php", "profile.php"],
+    "guides.php"
+);
 
 $guide_id = filter_input(INPUT_POST, "guide_id", FILTER_VALIDATE_INT);
 if (!$guide_id) {
