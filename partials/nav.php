@@ -36,6 +36,13 @@ $isLoggedIn = is_logged_in();
                             My Saved Guides
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="<?php echo project_url("my_flights.php"); ?>">
+                            My Flights
+                        </a>
+                    </li>
 
                     <?php if (has_role("Admin")): ?>
 
@@ -82,6 +89,26 @@ $isLoggedIn = is_logged_in();
                                 <li>
                                     <a class="dropdown-item" href="<?php echo project_url("admin/list_flights.php"); ?>">
                                         Manage Flights
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="<?php echo project_url("admin/list_user_flights.php"); ?>">
+                                        Flight Associations
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="<?php echo project_url("admin/list_unassociated_flights.php"); ?>">
+                                        Unassociated Flights
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="<?php echo project_url("admin/assign_flight_associations.php"); ?>">
+                                        Assign Flight Associations
                                     </a>
                                 </li>
                             </ul>
