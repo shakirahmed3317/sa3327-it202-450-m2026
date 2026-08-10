@@ -1,10 +1,10 @@
-## Project Name: (Which Project)
-### Project Summary: (Describe your project)
-### Github Link: (Prod Branch of project Folder)
-### Website Link: (Render.com Prod of project folder)
-### API Link: (the link to the documentation of your chosen API)
-### Your Name:
-### Course/Section/year:
+## Project Name: Flight Tracker
+### Project Summary: A website that lets you track flights
+### Github Link: https://github.com/shakirahmed3317/sa3327-it202-450-m2026/tree/prod
+### Website Link: https://sa3327-it202-450-m2026-prod.onrender.com/project/
+### API Link: https://rapidapi.com/aedbx-aedbx/api/aerodatabox
+### Your Name: Shakir Ahmed
+### Course/Section/year: IT202-450 Summer 2026
 
  
  
@@ -13,11 +13,11 @@
 select it to open/view it, then copy that url for the below items -->
 
 - Milestone 1
-  - (add link to milestone1.pdf from milestone1 branch)  
+  - https://github.com/shakirahmed3317/sa3327-it202-450-m2026/tree/Milestone1
 - Milestone 2
-  - (add link to milestone2.pdf from milestone2 branch)
+  - https://github.com/shakirahmed3317/sa3327-it202-450-m2026/tree/Milestone2
 - Milestone 3
-  - (add link to milestone3.pdf from milestone3 branch)
+  - https://github.com/shakirahmed3317/sa3327-it202-450-m2026/tree/Milestone3
 - Demo Link
-  - (add youtube link to unlisted or public demo) Note you'll need to verify your youtube account to upload videos > 15mins (https://support.google.com/youtube/answer/171664)
+  - coming soon
   
