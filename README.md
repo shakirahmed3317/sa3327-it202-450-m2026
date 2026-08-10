@@ -2,11 +2,11 @@
 
 ## Student Information
 
-- Name: 
+- Name: Shakir Ahmed
 - Course: IT202
-- Semester: 
-- Year:
-- Instructor: 
+- Semester: Summer
+- Year: 2026
+- Instructor: Matt Toegel
 
 ## About This Repository
 
