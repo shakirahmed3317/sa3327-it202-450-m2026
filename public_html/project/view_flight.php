@@ -48,6 +48,26 @@ if (!$flight) {
     header("Location: " . project_url("flights.php"));
     exit;
 }
+
+$is_saved = false;
+
+if (is_logged_in()) {
+
+    $saved_row = select(
+        "SELECT id
+         FROM UserFlights
+         WHERE user_id = :user_id
+         AND flight_id = :flight_id
+         LIMIT 1",
+        [
+            "user_id" => get_user_id(),
+            "flight_id" => $id
+        ]
+    );
+
+    $is_saved = ($saved_row !== null);
+}
+
 ?>
 
 <!doctype html>
@@ -173,7 +193,43 @@ if (!$flight) {
 
                     <?php endif; ?>
 
+                    <?php if (is_logged_in()): ?>
+
+                        <form method="post"
+                            action="<?php echo project_url("internal/toggle_saved_flight.php"); ?>">
+
+                            <input
+                                type="hidden"
+                                name="flight_id"
+                                value="<?php echo htmlspecialchars($id); ?>">
+
+                            <?php if ($is_saved): ?>
+
+                                <button
+                                    class="btn btn-danger"
+                                    type="submit"
+                                    name="action"
+                                    value="remove">
+                                    Remove Saved Flight
+                                </button>
+
+                            <?php else: ?>
+
+                                <button
+                                    class="btn btn-primary"
+                                    type="submit"
+                                    name="action"
+                                    value="save">
+                                    Save Flight
+                                </button>
+
+                            <?php endif; ?>
+
+                        </form>
+
+                    <?php endif; ?>
                 </div>
+
 
             </div>
 
