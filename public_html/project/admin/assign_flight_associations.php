@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["apply"])) {
             $created_count = 0;
             $removed_count = 0;
 
-            foreach ($selected_users as $user_id) {
+            foreach ($selected_users as $user_id) { //sa3327 08/9
 
                 foreach ($selected_flights as $flight_id) {
 
@@ -148,7 +148,7 @@ $users = [];
 $flights = [];
 
 try {
-
+//sa3327 08/9
     if ($username_search !== "") {
 
         $users = selectAll(

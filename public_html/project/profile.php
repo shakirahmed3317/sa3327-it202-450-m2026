@@ -97,6 +97,24 @@ try {
     exit;
 }
 
+$recent_flights = [];
+
+if (!$is_edit) {
+    $recent_flights = selectAll(
+        "SELECT f.id, f.flight_number, f.airline, f.aircraft_model,
+                f.departure_airport, f.departure_city,
+                f.arrival_airport, f.arrival_city,
+                f.distance_km,
+                uf.created AS saved_on
+         FROM UserFlights uf
+         JOIN Flights f ON f.id = uf.flight_id
+         WHERE uf.user_id = :user_id
+         ORDER BY uf.modified DESC, f.id ASC
+         LIMIT 5",
+        ["user_id" => $user_id]
+    );
+}
+
 $db = getDB();
 $errors = [];
 
@@ -310,6 +328,73 @@ if (
                 <a class="btn btn-secondary mt-3"
                     href="<?php echo htmlspecialchars($return_to); ?>">Back</a>
             <?php endif; ?>
+        <?php endif; ?>
+        <h2>Recently Saved Flights</h2>
+
+        <?php if (empty($recent_flights)): ?>
+
+            <p>This user has not saved any flights.</p>
+
+        <?php else: ?>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Flight</th>
+                            <th>Airline</th>
+                            <th>Aircraft</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Distance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <?php foreach ($recent_flights as $flight): ?>
+
+                            <tr>
+                                <td>
+                                    <a href="<?php echo project_url(
+                                                    "view_flight.php?id=" . urlencode($flight["id"])
+                                                ); ?>">
+                                        <?php echo htmlspecialchars($flight["flight_number"]); ?>
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <?php echo htmlspecialchars($flight["airline"]); ?>
+                                </td>
+
+                                <td>
+                                    <?php echo htmlspecialchars($flight["aircraft_model"]); ?>
+                                </td>
+
+                                <td>
+                                    <?php echo htmlspecialchars($flight["departure_airport"]); ?>
+                                    <?php if (!empty($flight["departure_city"])): ?>
+                                        - <?php echo htmlspecialchars($flight["departure_city"]); ?>
+                                    <?php endif; ?>
+                                </td>
+
+                                <td>
+                                    <?php echo htmlspecialchars($flight["arrival_airport"]); ?>
+                                    <?php if (!empty($flight["arrival_city"])): ?>
+                                        - <?php echo htmlspecialchars($flight["arrival_city"]); ?>
+                                    <?php endif; ?>
+                                </td>
+
+                                <td>
+                                    <?php echo htmlspecialchars($flight["distance_km"]); ?> km
+                                </td>
+                            </tr>
+
+                        <?php endforeach; ?>
+
+                    </tbody>
+                </table>
+            </div>
+
         <?php endif; ?>
     </main>
 

@@ -9,7 +9,7 @@ if (!is_logged_in()) {
 
 $user_id = get_user_id();
 $errors = [];
-
+//sa3327 8/9
 if (isset($_POST["remove_id"])) {
 
     $relationship_id = (int)($_POST["remove_id"] ?? 0);
@@ -40,9 +40,7 @@ if (isset($_POST["remove_id"])) {
             } else {
                 flash("Saved flight was not found.", "warning");
             }
-
         } catch (Throwable $e) {
-
             error_log("Remove saved flight failed: " . $e->getMessage());
             flash("Unable to remove the saved flight.", "danger");
         }
@@ -79,12 +77,9 @@ if (isset($_POST["remove_all"])) {
     exit;
 }
 
-
-
 $search = trim($_GET["q"] ?? "");
 
-
-
+// sa3327 8/9
 $sort = $_GET["sort"] ?? "modified";
 
 $allowed_sort = [
@@ -97,7 +92,6 @@ $allowed_sort = [
 if (!isset($allowed_sort[$sort])) {
     $sort = "modified";
 }
-
 
 $limit = filter_input(INPUT_GET, "limit", FILTER_VALIDATE_INT);
 
@@ -149,7 +143,7 @@ try {
 
 
 $flights = [];
-
+//sa3327 8/9
 try {
 
     $sql = "

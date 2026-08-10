@@ -11,6 +11,8 @@ $user_id = get_user_id();
 $flight_id = (int)($_POST["flight_id"] ?? 0);
 $action = $_POST["action"] ?? "";
 
+// sa3327 08/09
+
 if ($flight_id <= 0) {
     flash("Invalid flight.", "danger");
     header("Location: " . project_url("flights.php"));
