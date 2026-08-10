@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__ . "/../../../lib/app.php");
-require_role("Admin");
+require_role("Admin"); //sa3327 8/9
 
 $flights = [];
 
